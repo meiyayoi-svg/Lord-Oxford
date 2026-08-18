@@ -1,0 +1,702 @@
+[
+  {
+    "word": "a",
+    "phonetic": "/ə/, 重讀 /eɪ/",
+    "pos": "art.",
+    "translation": "art. 一（個）；任一；每一",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na number of → 許多；若干"
+  },
+  {
+    "word": "a bit",
+    "phonetic": "",
+    "pos": "phr.",
+    "translation": "一點；有點",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na bit of sth → 一點某物\na bit + adj./adv. → 有點……"
+  },
+  {
+    "word": "a couple",
+    "phonetic": "",
+    "pos": "phr.",
+    "translation": "一對；幾個；兩個左右",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na couple of sth → 幾個；兩個左右"
+  },
+  {
+    "word": "a few",
+    "phonetic": "",
+    "pos": "phr.",
+    "translation": "幾個；少數；一些",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na few of sth → ……中的幾個\nquite a few → 相當多"
+  },
+  {
+    "word": "a little",
+    "phonetic": "",
+    "pos": "phr.",
+    "translation": "一點；稍微",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na little of sth → 一點某物\na little + adj./adv. → 稍微……"
+  },
+  {
+    "word": "a lot",
+    "phonetic": "",
+    "pos": "phr.",
+    "translation": "許多；很；非常",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na lot of sth → 許多某物\na lot more → 多得多"
+  },
+  {
+    "word": "abandon",
+    "phonetic": "/əˈbæn.dən/",
+    "pos": "vt.",
+    "translation": "vt. 放棄；拋棄；遺棄",
+    "roots": "Word formation: 源自古法語 abandoner，與「任由；放手」有關；不作現代 ab- + band + -on 硬拆\nCommon collocations:\nabandon a plan → 放棄計畫\nabandon an attempt → 放棄嘗試\nabandon hope → 放棄希望"
+  },
+  {
+    "word": "abandoned",
+    "phonetic": "/əˈbæn.dənd/",
+    "pos": "adj.",
+    "translation": "adj. 被遺棄的；荒廢的；放棄的",
+    "roots": "abandon + -ed(形容詞後綴)\nCommon collocations:\nabandoned building → 廢棄建築\nabandoned vehicle → 被遺棄的車輛"
+  },
+  {
+    "word": "ability",
+    "phonetic": "/əˈbɪl.ə.ti/",
+    "pos": "n.",
+    "translation": "n. 能力；才能",
+    "roots": "abil(能夠的)+ -ity(名詞後綴,表性質)\nCommon collocations:\nability to do sth → 做某事的能力\nhave the ability to → 有能力……\ndevelop one’s ability → 發展能力"
+  },
+  {
+    "word": "able",
+    "phonetic": "/ˈeɪ.bəl/",
+    "pos": "adj.",
+    "translation": "adj. 能夠的；有能力的；能幹的",
+    "roots": "Word formation: 源自拉丁語 habilis「容易處理的；有能力的」；不作 able 的現代字面拆解\nCommon collocations:\nbe able to do sth → 能夠做某事"
+  },
+  {
+    "word": "about",
+    "phonetic": "/əˈbaʊt/",
+    "pos": "prep.; adv.; adj.",
+    "translation": "prep. 關於；在……周圍；大約\nadv. 大約；到處；四處\nadj. 四處活動的",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nabout to do sth → 即將做某事\nabout sth → 關於某事"
+  },
+  {
+    "word": "above",
+    "phonetic": "/əˈbʌv/",
+    "pos": "prep.; adv.; adj.",
+    "translation": "prep. 在……上方；超出；高於\nadv. 在上面；在上文\nadj. 上述的；以上的",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nabove average → 高於平均水平\nabove all → 最重要的是\nas mentioned above → 如上所述"
+  },
+  {
+    "word": "abroad",
+    "phonetic": "/əˈbrɔːd/",
+    "pos": "adv.; adj.",
+    "translation": "adv. 在國外；到國外\nadj. 在國外的；海外的",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nstudy abroad → 出國留學\ngo abroad → 出國\nlive abroad → 居住海外"
+  },
+  {
+    "word": "absence",
+    "phonetic": "/ˈæb.səns/",
+    "pos": "n.",
+    "translation": "n. 缺席；不在；缺乏",
+    "roots": "ab-(不,離開)+sence(=esse存在)→ 不在場\nCommon collocations:\nabsence of sth → 缺乏某物\nin the absence of → 在缺乏……的情況下\nduring sb’s absence → 某人缺席期間"
+  },
+  {
+    "word": "absent",
+    "phonetic": "/ˈæb.sənt/",
+    "pos": "adj.; v.",
+    "translation": "adj. 缺席的；不在的；心不在焉的\nv. 缺席",
+    "roots": "ab-(不,離開)+sent(=esse存在)→ 不在場的\nCommon collocations:\nbe absent from → 缺席\nabsent from school/work → 缺課／缺勤\nabsent-minded → 心不在焉的"
+  },
+  {
+    "word": "absolute",
+    "phonetic": "/ˈæb.sə.luːt/",
+    "pos": "adj.; n.",
+    "translation": "adj. 絕對的；完全的；不受限制的\nn. 絕對事物",
+    "roots": "ab-(徹底)+solut(解開,鬆開)→ 不受限制的 → 絕對的\nCommon collocations:\nabsolute certainty → 絕對確定\nabsolute majority → 絕對多數\nabsolute freedom → 絕對自由"
+  },
+  {
+    "word": "absolutely",
+    "phonetic": "/ˈæb.sə.luːt.li/",
+    "pos": "adv.",
+    "translation": "adv. 完全地；絕對地；毫無疑問地",
+    "roots": "absolute + -ly(副詞後綴)\nCommon collocations:\nabsolutely essential → 絕對必要\nabsolutely no → 完全沒有\nabsolutely certain → 完全確定"
+  },
+  {
+    "word": "absorb",
+    "phonetic": "/əbˈzɔːb/",
+    "pos": "vt.",
+    "translation": "vt. 吸收；吸納；使全神貫注",
+    "roots": "ab-(向)+sorb(吸)→ 吸入\nCommon collocations:\nabsorb information → 吸收資訊\nabsorb nutrients → 吸收營養\nbe absorbed in → 全神貫注於"
+  },
+  {
+    "word": "abuse",
+    "phonetic": "/əˈbjuːs/(n.), /əˈbjuːz/(v.)",
+    "pos": "n.; vt.",
+    "translation": "n. 濫用;虐待;辱罵\nvt. 濫用;虐待;辱罵",
+    "roots": "ab-(不正當地)+use(使用)→ 濫用\nCommon collocations:\ndrug abuse → 濫用毒品\nalcohol abuse → 酒精濫用\nabuse power → 濫用權力\nchild abuse → 虐待兒童"
+  },
+  {
+    "word": "academic",
+    "phonetic": "/ˌæk.əˈdem.ɪk/",
+    "pos": "adj.; n.",
+    "translation": "adj. 學術的；學業的；理論上的\nn. 學者；大學教師",
+    "roots": "源自希臘語 Academy(柏拉圖學院)→ 學術的\nCommon collocations:\nacademic research → 學術研究\nacademic performance → 學業表現\nacademic achievement → 學業成就"
+  },
+  {
+    "word": "accent",
+    "phonetic": "/ˈæk.sənt/",
+    "pos": "n.; vt.",
+    "translation": "n. 口音;重音\nvt. 強調",
+    "roots": "ac-(=ad,向)+cent(=cantus唱,聲調)→ 重讀音\nCommon collocations:\nforeign accent → 外國口音\nregional accent → 地區口音"
+  },
+  {
+    "word": "accept",
+    "phonetic": "/əkˈsept/",
+    "pos": "vt.",
+    "translation": "vt. 接受；認可；同意；承認",
+    "roots": "ac-(=ad,向)+cept(=capere拿,取)→ 接受\nCommon collocations:\naccept responsibility → 承擔責任\naccept an offer → 接受提議\naccept the fact that → 接受……這一事實"
+  },
+  {
+    "word": "acceptable",
+    "phonetic": "/əkˈsep.tə.bəl/",
+    "pos": "adj.",
+    "translation": "adj. 可接受的；令人滿意的；合乎要求的",
+    "roots": "accept + -able(可…的)\nCommon collocations:\nacceptable level → 可接受的水平\nacceptable standard → 可接受的標準\nsocially acceptable → 社會可接受的"
+  },
+  {
+    "word": "access",
+    "phonetic": "/ˈæk.ses/",
+    "pos": "n.; vt.",
+    "translation": "n. 通道；入口；使用權；接觸機會\nvt. 進入；使用；存取",
+    "roots": "ac-(=ad,向)+cess(=cedere走,行)→ 走向,通道\nCommon collocations:\naccess to sth → 使用／接觸某物的機會或權利\nhave access to → 有權使用／接觸\ngain access to → 獲得使用／進入……的機會\nprovide access to → 提供……的途徑／機會"
+  },
+  {
+    "word": "accident",
+    "phonetic": "/ˈæk.sɪ.dənt/",
+    "pos": "n.",
+    "translation": "n. 事故;意外(事件)",
+    "roots": "ac-(=ad)+cid(=cadere落下)+ent → 突然發生的事 → 事故\nCommon collocations:\nroad accident → 道路事故\ntraffic accident → 交通事故\nby accident → 偶然地\naccident prevention → 事故預防"
+  },
+  {
+    "word": "accidental",
+    "phonetic": "/ˌæk.sɪˈden.təl/",
+    "pos": "adj.",
+    "translation": "a. 意外的;偶然的",
+    "roots": "accident + -al(形容詞後綴)\nCommon collocations:\naccidental damage → 意外損害\naccidental discovery → 偶然發現\naccidental death → 意外死亡"
+  },
+  {
+    "word": "accidentally",
+    "phonetic": "/ˌæk.sɪˈden.tə.li/",
+    "pos": "adv.",
+    "translation": "adv. 偶然地;意外地",
+    "roots": "accidental + -ly(副詞後綴)\nCommon collocations:\nhappen accidentally → 意外發生\nbe accidentally damaged → 意外受損"
+  },
+  {
+    "word": "accommodation",
+    "phonetic": "/əˌkɒm.əˈdeɪ.ʃən/",
+    "pos": "n.",
+    "translation": "n. 住宿",
+    "roots": "ac-(=ad)+commod(適合,方便)+ation → 使適合 → 住宿安排\nCommon collocations:\naccommodation costs → 住宿費用\nstudent accommodation → 學生住宿\nprovide accommodation → 提供住宿\nfind accommodation → 找住宿"
+  },
+  {
+    "word": "accompany",
+    "phonetic": "/əˈkʌm.pə.ni/",
+    "pos": "vt.",
+    "translation": "vt. 陪伴;伴隨;為...伴奏\nvi. 伴奏",
+    "roots": "ac-(=ad)+com(共同)+pany(=panis麵包,夥伴)→ 陪伴\nCommon collocations:\naccompany sb → 陪伴某人\nbe accompanied by → 由……陪同／伴隨\naccompany sth with sth → 以某物伴隨某物"
+  },
+  {
+    "word": "according to",
+    "phonetic": "",
+    "pos": "prep. phr.",
+    "translation": "根據;按照",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\naccording to the report → 根據報告\naccording to research → 根據研究\naccording to data → 根據數據"
+  },
+  {
+    "word": "account",
+    "phonetic": "/əˈkaʊnt/",
+    "pos": "n.; vi.",
+    "translation": "n. 帳戶；描述；報告；比例\nvi. 解釋；佔（比例）",
+    "roots": "ac-(=ad)+count(計數)→ 計算,記賬\nCommon collocations:\naccount for sth → 解釋某事；佔（比例）\ntake sth into account → 把某事考慮在內\non account of → 因為；由於\ngive an account of → 描述；報告"
+  },
+  {
+    "word": "accurate",
+    "phonetic": "/ˈæk.jə.rət/",
+    "pos": "adj.",
+    "translation": "a. 準確的;精確的",
+    "roots": "ac-(=ad)+cur(關心,留意)+ate → 仔細核對的 → 精確的\nCommon collocations:\naccurate information → 準確資訊\naccurate measurement → 精確測量\nhighly accurate → 高度準確"
+  },
+  {
+    "word": "accurately",
+    "phonetic": "/ˈæk.jə.rət.li/",
+    "pos": "adv.",
+    "translation": "adv. 準確地;精確地",
+    "roots": "accurate + -ly(副詞後綴)\nCommon collocations:\naccurately measure → 精確測量\naccurately reflect → 準確反映\naccurately describe → 準確描述"
+  },
+  {
+    "word": "accuse",
+    "phonetic": "/əˈkjuːz/",
+    "pos": "vt.",
+    "translation": "vt. 指責;控告\nvi. 指責,控告",
+    "roots": "ac-(=ad)+cuse(=causa原因,案由)→ 起訴\nCommon collocations:\naccuse sb of sth → 指控某人某事\nbe accused of → 被指控……\nfalsely accuse → 錯誤指控"
+  },
+  {
+    "word": "achieve",
+    "phonetic": "/əˈtʃiːv/",
+    "pos": "vt.",
+    "translation": "vt. 實現；達到；完成；取得",
+    "roots": "a-(=ad)+chieve(=chief頭,端點)→ 到達終點 → 實現\nCommon collocations:\nachieve a goal → 達成目標\nachieve success → 取得成功\nachieve results → 取得成果"
+  },
+  {
+    "word": "achievement",
+    "phonetic": "/əˈtʃiːv.mənt/",
+    "pos": "n.",
+    "translation": "n. 成就;成績",
+    "roots": "achieve + -ment(名詞後綴)\nCommon collocations:\nacademic achievement → 學業成就\nmajor achievement → 重大成就\na sense of achievement → 成就感"
+  },
+  {
+    "word": "acid",
+    "phonetic": "/ˈæs.ɪd/",
+    "pos": "n.; adj.",
+    "translation": "n. 酸\na. 酸的;尖酸刻薄的",
+    "roots": "acid(=acidus酸的,源自acere發酸)\nCommon collocations:\nacid rain → 酸雨\nacidic soil → 酸性土壤\nacid concentration → 酸濃度"
+  },
+  {
+    "word": "acknowledge",
+    "phonetic": "/əkˈnɒl.ɪdʒ/",
+    "pos": "vt.",
+    "translation": "vt. 承認；認可；告知收悉",
+    "roots": "ac-(=ad)+knowledge(知道)→ 承認知曉\nCommon collocations:\nacknowledge the fact that → 承認……這一事實\nacknowledge a problem → 承認問題\nacknowledge receipt of → 告知收到……"
+  },
+  {
+    "word": "acquire",
+    "phonetic": "/əˈkwaɪə(r)/",
+    "pos": "vt.",
+    "translation": "vt. 獲得；取得；學到；習得",
+    "roots": "ac-(=ad)+quire(=quaerere尋求)→ 求得,獲得\nCommon collocations:\nacquire knowledge → 獲取知識\nacquire skills → 掌握技能\nacquire a language → 習得語言"
+  },
+  {
+    "word": "across",
+    "phonetic": "/əˈkrɒs/",
+    "pos": "prep.; adv.",
+    "translation": "prep. 穿過;橫過;在...對面\nadv. 到對岸;寬為",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nacross the world → 全世界\nacross the country → 全國各地\nacross from → 在……對面"
+  },
+  {
+    "word": "act",
+    "phonetic": "/ækt/",
+    "pos": "n.; vi.; vt.",
+    "translation": "n. 行為,行動;法案;(戲劇的)幕\nvi. 行動;表現;表演\nvt. 扮演",
+    "roots": "act(=agere/actus做,行動)\nCommon collocations:\ntake action → 採取行動\nact as → 擔任；起……作用\nact on → 根據……採取行動／對……產生作用"
+  },
+  {
+    "word": "action",
+    "phonetic": "/ˈæk.ʃən/",
+    "pos": "n.",
+    "translation": "n. 行動；行為；作用",
+    "roots": "act(行動)+ -ion(名詞後綴)\nCommon collocations:\ntake action → 採取行動\nhuman action → 人類行為\ncriminal action → 犯罪行為\nthe action of a drug → 藥物作用"
+  },
+  {
+    "word": "active",
+    "phonetic": "/ˈæk.tɪv/",
+    "pos": "adj.; n.",
+    "translation": "a. 活躍的;積極的;主動的\nn. (語法)主動語態",
+    "roots": "act(行動)+ -ive(形容詞後綴,有…性質的)\nCommon collocations:\nactive role → 積極作用／角色\nactive participation → 積極參與\ntake an active part in → 積極參與"
+  },
+  {
+    "word": "actively",
+    "phonetic": "/ˈæk.tɪv.li/",
+    "pos": "adv.",
+    "translation": "adv. 積極地;主動地",
+    "roots": "active + -ly(副詞後綴)\nCommon collocations:\nactively participate in → 積極參與\nactively seek → 積極尋求\nactively involved in → 積極參與……"
+  },
+  {
+    "word": "activity",
+    "phonetic": "/ækˈtɪv.ə.ti/",
+    "pos": "n.",
+    "translation": "n. 活動;行動",
+    "roots": "active + -ity(名詞後綴)\nCommon collocations:\nphysical activity → 身體活動\neconomic activity → 經濟活動\nhuman activity → 人類活動"
+  },
+  {
+    "word": "actor",
+    "phonetic": "/ˈæk.tər/",
+    "pos": "n.",
+    "translation": "n. 演員",
+    "roots": "act(表演,行動)+ -or(名詞後綴,表人)\nCommon collocations:\nkey actor → 關鍵參與者\npolitical actor → 政治參與者\nmajor actor → 主要參與者"
+  },
+  {
+    "word": "actual",
+    "phonetic": "/ˈæk.tʃu.əl/",
+    "pos": "adj.",
+    "translation": "a. 實際的;真實的",
+    "roots": "act(=actus已做的,實際的)+ -ual(形容詞後綴)\nCommon collocations:\nactual cost → 實際成本\nactual number → 實際數量\nactual situation → 實際情況"
+  },
+  {
+    "word": "actually",
+    "phonetic": "/ˈæk.tʃu.ə.li/",
+    "pos": "adv.",
+    "translation": "adv. 實際上;事實上;竟然",
+    "roots": "actual + -ly(副詞後綴)\nCommon collocations:\nactually occur → 實際發生\nactually exist → 實際存在\nin actual fact → 事實上"
+  },
+  {
+    "word": "ad",
+    "phonetic": "/æd/",
+    "pos": "n.",
+    "translation": "n. 廣告(advertisement 的縮寫)",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nonline ad → 網路廣告\nclassified ad → 分類廣告"
+  },
+  {
+    "word": "adapt",
+    "phonetic": "/əˈdæpt/",
+    "pos": "vt.; vi.",
+    "translation": "vt. 使適應;改編\nvi. 適應",
+    "roots": "ad-(向,朝)+apt(合適的)→ 使合適 → 適應\nCommon collocations:\nadapt to sth → 適應某事物\nadapt to change → 適應變化\nadapt sth for → 為……改編某物"
+  },
+  {
+    "word": "add",
+    "phonetic": "/æd/",
+    "pos": "vt.; vi.",
+    "translation": "vt. 增加;添加\nvi. 做加法",
+    "roots": "Word formation: 源自拉丁語 addere「加上」\nCommon collocations:\nadd to sth → 增加某事物\nadd sth to sth → 把某物加到某物中\nadd value to → 增加……的價值"
+  },
+  {
+    "word": "addition",
+    "phonetic": "/əˈdɪʃ.ən/",
+    "pos": "n.",
+    "translation": "n. 加法;增加的人(或物)",
+    "roots": "add + -ition(名詞後綴)\nCommon collocations:\nin addition to → 除……之外\nin addition → 此外\nan addition to → ……的新增部分"
+  },
+  {
+    "word": "additional",
+    "phonetic": "/əˈdɪʃ.ən.əl/",
+    "pos": "adj.",
+    "translation": "a. 附加的;另外的;額外的",
+    "roots": "addition + -al(形容詞後綴)\nCommon collocations:\nadditional information → 額外資訊\nadditional cost → 額外成本\nadditional evidence → 額外證據"
+  },
+  {
+    "word": "address",
+    "phonetic": "/əˈdres/",
+    "pos": "n.; vt.",
+    "translation": "n. 地址；演說\nvt. 發表（演說）；處理；應對；寫地址",
+    "roots": "ad-(向)+dress(整理,指向)→ 指向目標 → 地址;應對\nCommon collocations:\naddress a problem → 處理問題\naddress an issue → 處理議題\naddress the needs of → 滿足／應對……的需求\ndeliver an address → 發表演說"
+  },
+  {
+    "word": "adequate",
+    "phonetic": "/ˈæd.ɪ.kwət/",
+    "pos": "adj.",
+    "translation": "adj. 適當的；足夠的；能滿足需求的",
+    "roots": "ad-(向)+equ(相等)+ate → 與需求相等 → 足夠的\nCommon collocations:\nadequate for sth → 足以應付某事物\nadequate resources → 足夠資源\nadequate protection → 充分保護"
+  },
+  {
+    "word": "adequately",
+    "phonetic": "/ˈæd.ɪ.kwət.li/",
+    "pos": "adv.",
+    "translation": "adv. 足夠地;適當地",
+    "roots": "adequate + -ly(副詞後綴)\nCommon collocations:\nadequately address → 充分處理\nadequately protect → 充分保護\nadequately equipped → 配備充足"
+  },
+  {
+    "word": "adjust",
+    "phonetic": "/əˈdʒʌst/",
+    "pos": "vt.; vi.",
+    "translation": "vt. 調整；使適應\nvi. 適應；調節",
+    "roots": "ad-(向)+just(公正,正確)→ 調整至正確\nCommon collocations:\nadjust to sth → 適應某事物\nadjust the level → 調整水平\nadjust to change → 適應變化"
+  },
+  {
+    "word": "admiration",
+    "phonetic": "/ˌæd.məˈreɪ.ʃən/",
+    "pos": "n.",
+    "translation": "n. 欽佩;讚賞",
+    "roots": "ad-(向)+mir(=mirari驚奇,注視)→ 注目而生敬意\nCommon collocations:\nadmiration for sb/sth → 對某人／某事物的欽佩\nexpress admiration → 表達欽佩"
+  },
+  {
+    "word": "admire",
+    "phonetic": "/ədˈmaɪər/",
+    "pos": "vt.",
+    "translation": "vt. 欽佩;讚美;愛慕",
+    "roots": "ad-(向)+mire(=mirari注視,驚奇)→ 欽佩\nCommon collocations:\nadmire sb for sth → 因某事而欽佩某人\nadmire the beauty of → 欣賞……的美"
+  },
+  {
+    "word": "admit",
+    "phonetic": "/ədˈmɪt/",
+    "pos": "vt.",
+    "translation": "vt. 承認；準許進入；容納",
+    "roots": "ad-(向)+mit(=mittere送,放)→ 放入 → 準許進入\nCommon collocations:\nadmit that → 承認……\nadmit to sth → 承認某事\nbe admitted to → 被准許進入／被錄取"
+  },
+  {
+    "word": "adopt",
+    "phonetic": "/əˈdɒpt/",
+    "pos": "vt.",
+    "translation": "vt. 採用；正式通過；收養",
+    "roots": "ad-(向)+opt(=optare選擇)→ 選定採納\nCommon collocations:\nadopt a policy → 採取政策\nadopt an approach → 採用方法\nadopt measures → 採取措施"
+  },
+  {
+    "word": "adult",
+    "phonetic": "/ˈæd.ʌlt/",
+    "pos": "n.; adj.",
+    "translation": "n. 成年人\na. 成年的;成熟的",
+    "roots": "ad-(向)+ult(=alescere生長)→ 長成 → 成年的\nCommon collocations:\nadult population → 成年人口\nadult education → 成人教育\nyoung adult → 年輕成年人"
+  },
+  {
+    "word": "advance",
+    "phonetic": "/ədˈvɑːns/",
+    "pos": "n.; vi.; vt.; adj.",
+    "translation": "n. 前進；進展；預付款\nvi. 前進；提高；上漲\nvt. 促進；提出；預付\nadj. 預先的",
+    "roots": "ad-(向)+vance(=ante在前)→ 向前 → 前進\nCommon collocations:\nadvance knowledge → 推進知識\nadvance rapidly → 快速進展\nin advance → 提前\nadvance payment → 預付款"
+  },
+  {
+    "word": "advanced",
+    "phonetic": "/ədˈvɑːnst/",
+    "pos": "adj.",
+    "translation": "a. 先進的;高級的",
+    "roots": "advance + -ed(形容詞後綴)\nCommon collocations:\nadvanced technology → 先進技術\nadvanced stage → 晚期／先進階段\nadvanced research → 前沿研究"
+  },
+  {
+    "word": "advantage",
+    "phonetic": "/ədˈvɑːn.tɪdʒ/",
+    "pos": "n.; vt.",
+    "translation": "n. 優勢；好處；優點\nvt. 有助於",
+    "roots": "ad-(向)+vantage(=avant前面)→ 處於前列 → 優勢\nCommon collocations:\nhave an advantage over → 比……有優勢\ntake advantage of → 利用\ncompetitive advantage → 競爭優勢"
+  },
+  {
+    "word": "adventure",
+    "phonetic": "/ədˈven.tʃər/",
+    "pos": "n.; v.",
+    "translation": "n. 冒險;冒險經歷\nv. 冒險",
+    "roots": "ad-(向)+vent(=venire來)→ 即將發生之事 → 冒險\nCommon collocations:\nadventure tourism → 冒險旅遊\nan exciting adventure → 刺激的冒險經歷"
+  },
+  {
+    "word": "advertise",
+    "phonetic": "/ˈæd.və.taɪz/",
+    "pos": "vt.; vi.",
+    "translation": "vt. 為...做廣告;宣傳\nvi. 做廣告",
+    "roots": "ad-(向)+vert(轉向)→ 使人注意 → 做廣告\nCommon collocations:\nadvertise a product → 為產品做廣告\nadvertise on television → 在電視上做廣告\nadvertise for sth → 登廣告尋找某物"
+  },
+  {
+    "word": "advertisement",
+    "phonetic": "/ədˈvɜː.tɪs.mənt/",
+    "pos": "n.",
+    "translation": "n. 廣告;啟事",
+    "roots": "advertise + -ment(名詞後綴)\nCommon collocations:\ntelevision advertisement → 電視廣告\nclassified advertisement → 分類廣告\nadvertisement for sth → ……的廣告"
+  },
+  {
+    "word": "advertising",
+    "phonetic": "/ˈæd.və.taɪ.zɪŋ/",
+    "pos": "n.; adj.",
+    "translation": "n. 廣告(業)\na. 廣告的",
+    "roots": "advertise + -ing\nCommon collocations:\nadvertising campaign → 廣告活動\nadvertising industry → 廣告業\nonline advertising → 網路廣告"
+  },
+  {
+    "word": "advice",
+    "phonetic": "/ədˈvaɪs/",
+    "pos": "n.",
+    "translation": "n. 建議;忠告",
+    "roots": "ad-(向)+vice(=videre看)→ 提出看法 → 建議\nCommon collocations:\ngive advice → 提供建議\nseek advice → 尋求建議\nadvice on sth → 關於某事的建議\ntake sb’s advice → 採納某人的建議"
+  },
+  {
+    "word": "advise",
+    "phonetic": "/ədˈvaɪz/",
+    "pos": "vt.",
+    "translation": "vt. 建議;勸告;通知\nvi. 提意見,商量",
+    "roots": "ad-(向)+vise(=videre看)→ 建議\nCommon collocations:\nadvise sb to do sth → 建議某人做某事\nadvise against sth → 建議不要做某事\nadvise sb of sth → 通知某人某事"
+  },
+  {
+    "word": "affair",
+    "phonetic": "/əˈfeər/",
+    "pos": "n.",
+    "translation": "n. 事情;事務;(尤指婚外)風流韻事",
+    "roots": "Word formation: 源自法語 à faire「去做」→ 要做的事情 → 事務\nCommon collocations:\npublic affairs → 公共事務\nforeign affairs → 外交事務\ncurrent affairs → 時事"
+  },
+  {
+    "word": "affect",
+    "phonetic": "/əˈfekt/",
+    "pos": "vt.",
+    "translation": "vt. 影響；對……產生作用；感動",
+    "roots": "af-(=ad,向)+fect(=facere做)→ 施加作用於 → 影響\nCommon collocations:\naffect the way → 影響……的方式\naffect people’s lives → 影響人們的生活\nadversely affect → 對……產生不利影響"
+  },
+  {
+    "word": "affection",
+    "phonetic": "/əˈfek.ʃən/",
+    "pos": "n.",
+    "translation": "n. 喜愛;感情",
+    "roots": "affect + -ion(名詞後綴)\nCommon collocations:\naffection for sb → 對某人的喜愛\nshow affection → 表達愛意／感情"
+  },
+  {
+    "word": "afford",
+    "phonetic": "/əˈfɔːd/",
+    "pos": "vt.",
+    "translation": "vt. 負擔得起；提供；給予",
+    "roots": "Word formation: 源自古英語相關形式，現代詞義已詞彙化；不作現代字面硬拆\nCommon collocations:\nafford to do sth → 負擔得起做某事\ncannot afford to → 無法承受／負擔不起\nafford an opportunity → 提供機會"
+  },
+  {
+    "word": "afraid",
+    "phonetic": "/əˈfreɪd/",
+    "pos": "adj.",
+    "translation": "a. 害怕的;擔心的,恐怕",
+    "roots": "Word formation: 源自古英語 ofrædan「恐懼」；不作現代字面硬拆\nCommon collocations:\nbe afraid of → 害怕\nbe afraid to do sth → 害怕做某事\nI’m afraid that → 恐怕……"
+  },
+  {
+    "word": "after",
+    "phonetic": "/ˈɑːf.tər/",
+    "pos": "prep.; conj.; adv.; adj.",
+    "translation": "prep. 在...之後;由於\nconj. 在...之後\nadv. 後來",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nafter all → 畢竟\nshortly after → 不久之後\nday after day → 日復一日"
+  },
+  {
+    "word": "afternoon",
+    "phonetic": "/ˌɑːf.təˈnuːn/",
+    "pos": "n.",
+    "translation": "n. 下午",
+    "roots": "after(之後)+noon(正午)→ 下午\nCommon collocations:\nin the afternoon → 在下午\nthis afternoon → 今天下午\nlate afternoon → 下午晚些時候"
+  },
+  {
+    "word": "afterwards",
+    "phonetic": "/ˈɑːf.tə.wədz/",
+    "pos": "adv.",
+    "translation": "adv. 後來;然後",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nshortly afterwards → 不久之後\nsoon afterwards → 很快之後"
+  },
+  {
+    "word": "again",
+    "phonetic": "/əˈgen/",
+    "pos": "adv.",
+    "translation": "adv. 再一次;又",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nonce again → 再一次\nagain and again → 一再\ntry again → 再試一次"
+  },
+  {
+    "word": "against",
+    "phonetic": "/əˈgenst/",
+    "pos": "prep.",
+    "translation": "prep. 反對;倚靠;對著",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nagainst the law → 違法\nagainst the background of → 在……背景下"
+  },
+  {
+    "word": "age",
+    "phonetic": "/eɪdʒ/",
+    "pos": "n.; v.",
+    "translation": "n. 年齡;時代,時期\nv. 變老,成熟",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nat the age of → 在……歲時\nage group → 年齡組\nage rapidly → 快速老化"
+  },
+  {
+    "word": "aged",
+    "phonetic": "…歲的 /eɪdʒd/;年老的 /ˈeɪ.dʒɪd/",
+    "pos": "adj.",
+    "translation": "a. 老的;...歲的",
+    "roots": "age + -ed(形容詞後綴)\nCommon collocations:\naged between A and B → 年齡介於 A 與 B 之間\naged population → 老年人口\npeople aged 65 and over → 65 歲及以上人口"
+  },
+  {
+    "word": "agency",
+    "phonetic": "/ˈeɪ.dʒən.si/",
+    "pos": "n.",
+    "translation": "n. 代理機構;中介",
+    "roots": "agent + -cy(名詞後綴,表機構)\nCommon collocations:\ngovernment agency → 政府機構\ntravel agency → 旅行社\nagency responsible for → 負責……的機構"
+  },
+  {
+    "word": "agent",
+    "phonetic": "/ˈeɪ.dʒənt/",
+    "pos": "n.",
+    "translation": "n. 代理人;代表",
+    "roots": "ag(=agere做,驅動)+ -ent(名詞後綴,表人)→ 行動者\nCommon collocations:\ngovernment agent → 政府代理人\nestate agent → 房地產經紀人\ncausal agent → 致因"
+  },
+  {
+    "word": "aggressive",
+    "phonetic": "/əˈgres.ɪv/",
+    "pos": "adj.",
+    "translation": "a. 侵略性的;好鬥的;有進取心的",
+    "roots": "ag-(=ad,向)+gress(=gradi走)+ive → 向前逼近的 → 侵略性的\nCommon collocations:\naggressive behaviour → 攻擊性行為\naggressive marketing → 強勢行銷\naggressive approach → 強硬／積極的方法"
+  },
+  {
+    "word": "ago",
+    "phonetic": "/əˈgəʊ/",
+    "pos": "adv.",
+    "translation": "adv. 以前",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nyears ago → 幾年前\na long time ago → 很久以前\nnot long ago → 不久前"
+  },
+  {
+    "word": "agree",
+    "phonetic": "/əˈgriː/",
+    "pos": "vi.; vt.",
+    "translation": "vi. 同意;贊成\nvt. 同意",
+    "roots": "ag-(=ad,向)+gree(=gratus令人愉快的)→ 達成一致\nCommon collocations:\nagree with sb → 同意某人\nagree on sth → 就某事達成一致\nagree to do sth → 同意做某事\nagree that → 同意……"
+  },
+  {
+    "word": "agreement",
+    "phonetic": "/əˈgriː.mənt/",
+    "pos": "n.",
+    "translation": "n. 同意;協議",
+    "roots": "agree + -ment(名詞後綴)\nCommon collocations:\nreach an agreement → 達成協議\nin agreement with → 與……一致\nmutual agreement → 共同協議"
+  },
+  {
+    "word": "ahead",
+    "phonetic": "/əˈhed/",
+    "pos": "adj.; adv.",
+    "translation": "a. 領先的\nadv. 在前面;提前",
+    "roots": "a-(在)+head(頭,前部)→ 在前面\nCommon collocations:\nahead of → 在……之前\nplan ahead → 提前計畫\nahead of schedule → 提前於計畫"
+  },
+  {
+    "word": "aid",
+    "phonetic": "/eɪd/",
+    "pos": "n.; vt.; vi.",
+    "translation": "n. 幫助;援助\nvt. 援助,幫助\nvi. 幫助",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nforeign aid → 外國援助\nfinancial aid → 財政援助\nwith the aid of → 在……的幫助下\naid development → 援助發展"
+  },
+  {
+    "word": "aim",
+    "phonetic": "/eɪm/",
+    "pos": "n.; vi.; vt.",
+    "translation": "n. 目標；目的；瞄準\nvi. 致力於；打算\nvt. 瞄準",
+    "roots": "Word formation: 源自古法語 esmer「估計；瞄準」；不作現代字面硬拆\nCommon collocations:\naim to do sth → 旨在做某事\naim at sth → 以某事為目標\nthe main aim → 主要目標\nwith the aim of doing → 以做某事為目的"
+  },
+  {
+    "word": "air",
+    "phonetic": "/eər/",
+    "pos": "n.; vt.",
+    "translation": "n. 空氣;神情\nvt. 晾;使通風;發表(意見)",
+    "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nair pollution → 空氣污染\nair quality → 空氣品質\nair one’s views → 公開表達觀點"
+  },
+  {
+    "word": "aircraft",
+    "phonetic": "/ˈeə.krɑːft/",
+    "pos": "n.",
+    "translation": "n. 飛機;航空器",
+    "roots": "air(空中)+craft(工藝,器具)→ 航空器\nCommon collocations:\ncommercial aircraft → 商用飛機\naircraft industry → 航空器產業\naircraft noise → 飛機噪音"
+  },
+  {
+    "word": "airport",
+    "phonetic": "/ˈeə.pɔːt/",
+    "pos": "n.",
+    "translation": "n. 機場",
+    "roots": "air(空中)+port(港口)→ 空中港口 → 機場\nCommon collocations:\nairport terminal → 機場航廈\nairport security → 機場安檢\ninternational airport → 國際機場"
+  },
+  {
+    "word": "alarm",
+    "phonetic": "/əˈlɑːm/",
+    "pos": "n.; vt.",
+    "translation": "n. 警報；鬧鐘；驚恐；憂慮\nvt. 使驚恐；警告",
+    "roots": "Word formation: 源自義大利語 all'arme「拿起武器！」→ 警報；不作 alarm = al- + arm 的現代構詞分析\nCommon collocations:\nfire alarm → 火警警報器\nset the alarm → 設定鬧鐘\nraise the alarm → 發出警報／引起警覺\ncause alarm → 引起恐慌"
+  },
+  {
+    "word": "alarmed",
+    "phonetic": "/əˈlɑːmd/",
+    "pos": "adj.",
+    "translation": "adj. 驚恐的；擔心的；警覺的",
+    "roots": "alarm + -ed(形容詞後綴)\nCommon collocations:\nbe alarmed by → 因……而驚恐\nbe alarmed at → 對……感到擔憂\ndeeply alarmed → 深感憂慮"
+  },
+  {
+    "word": "alarming",
+    "phonetic": "/əˈlɑː.mɪŋ/",
+    "pos": "adj.",
+    "translation": "adj. 令人驚恐的；令人擔憂的",
+    "roots": "alarm + -ing(形容詞後綴)\nCommon collocations:\nalarming rate → 令人擔憂的速度\nalarming increase → 令人擔憂的增加\nalarming level → 令人擔憂的程度"
+  },
+  {
+    "word": "alcohol",
+    "phonetic": "/ˈæl.kə.hɒl/",
+    "pos": "n.",
+    "translation": "n. 酒精;酒",
+    "roots": "Word formation: 源自阿拉伯語 al-kuḥl，原指精細粉末／蒸餾物；後指酒精\nCommon collocations:\nalcohol consumption → 酒精攝取量\nalcohol abuse → 酒精濫用\nalcohol content → 酒精含量"
+  },
+  {
+    "word": "alcoholic",
+    "phonetic": "/ˌæl.kəˈhɒl.ɪk/",
+    "pos": "n.; adj.",
+    "translation": "n. 酒精依賴者；酒鬼\nadj. 含酒精的；酒精的",
+    "roots": "alcohol + -ic(形容詞後綴)\nCommon collocations:\nalcoholic beverage → 含酒精飲料\nalcoholic drink → 酒精飲料\nalcohol dependence → 酒精依賴"
+  }
+]
