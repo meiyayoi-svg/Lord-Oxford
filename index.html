@@ -3907,9 +3907,9 @@
 
     /* ============ 語音系統：OED 真人音源不提供可嵌入之公開介面，
        故採「系統候選語音（洗牌抽取，保證每輪不重複）→ 有道詞典英式發音」二級降級鏈。
-       候選池含 Daniel／Serena／Stephanie／Ava 四個精確名稱之系統語音；
-       實際會用到哪幾個，取決於當前裝置／瀏覽器偵測到哪些（例如 Mac 上通常只有
-       Daniel＋Serena，iPhone 視使用者下載的語音包而定，可能是 Daniel＋Stephanie＋Ava）。
+       候選池僅含 Daniel／Stephanie／Allison 三個精確名稱之系統語音；
+       實際會用到哪幾個，取決於當前裝置／瀏覽器偵測到哪些（例如某些裝置可能只偵測到
+       其中一或兩個，視系統已安裝的語音包而定）。
        抽取規則：把「這台裝置目前偵測到的候選語音」洗牌成一個隊列，依序抽出；
        抽完一輪（即用滿全部候選語音各一次）才重新洗牌，避免連續多次抽到同一個聲音，
        也避免固定死板的順序輪迴。若裝置上一個候選語音都未偵測到，
@@ -4038,7 +4038,7 @@
                 return;
             }
             if (voice) {
-                // 第一順位：macOS 系統 Daniel／Serena 真人語音
+                // 第一順位：系統內建 Daniel／Stephanie／Allison 真人語音
                 const utter = new SpeechSynthesisUtterance(word);
                 utter.voice = voice;
                 utter.lang = voice.lang || 'en-GB';
