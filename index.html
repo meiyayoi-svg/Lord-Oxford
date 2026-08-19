@@ -1,0 +1,5018 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oxford English Dictionary - Ebbinghausian Rigour</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- 引入撒花特效庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --oed-bg: #020d1d;
+            --oed-panel: rgba(8, 23, 46, 0.75);
+            --oed-panel-border: rgba(255, 255, 255, 0.12);
+            --oed-gold: #d4af37;
+            --oed-gold-hover: #f1c40f;
+            --oed-red: #d12b2b;
+            --oed-blue-accent: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success-border: rgba(34, 197, 94, 0.4);
+            --success-bg: rgba(34, 197, 94, 0.12);
+            --danger-border: rgba(239, 68, 68, 0.4);
+            --danger-bg: rgba(239, 68, 68, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--oed-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .oed-burst-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle at 10% 50%, rgba(20, 45, 85, 0.4) 0%, transparent 60%),
+                        radial-gradient(circle at 90% 10%, rgba(15, 30, 60, 0.3) 0%, transparent 50%);
+        }
+
+        .oed-burst-svg {
+            position: absolute;
+            left: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 650px;
+            height: 650px;
+            opacity: 0.85;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .oed-brand {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .oed-logo {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            color: #ffffff;
+            font-family: "EB Garamond", serif;
+        }
+
+        .oed-divider {
+            width: 2px;
+            height: 28px;
+            background-color: var(--oed-red);
+        }
+
+        .oed-title {
+            font-size: 30px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: #ffffff;
+            font-family: "EB Garamond", serif;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin: 8px 0 0 0;
+            font-weight: 300;
+            font-family: "EB Garamond", serif;
+            letter-spacing: 0.8px;
+            font-style: italic;
+        }
+
+        .glass-panel {
+            background: var(--oed-panel);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--oed-panel-border);
+            border-radius: 6px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .drop-zone {
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone:hover {
+            border-color: var(--oed-blue-accent);
+            background: rgba(56, 189, 248, 0.04);
+        }
+
+        .unit-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 16px 20px;
+        }
+
+        .unit-select {
+            padding: 8px 14px;
+            border-radius: 4px;
+            border: 1px solid var(--oed-panel-border);
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .unit-select option {
+            background: #06152a;
+            color: #ffffff;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .toggle-label:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .mode-nav {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--oed-panel-border);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: var(--oed-blue-accent);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+        }
+
+        .dashboard {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 16px;
+            font-size: 14px;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .stat-val {
+            color: #ffffff;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .stat-btn {
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 4px;
+            background: rgba(209, 43, 43, 0.15);
+            border: 1px solid rgba(209, 43, 43, 0.3);
+            transition: all 0.2s;
+        }
+
+        .stat-btn:hover {
+            background: rgba(209, 43, 43, 0.25);
+        }
+
+        .quiz-card {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .word-display {
+            font-size: 46px;
+            font-weight: 500;
+            color: #ffffff;
+            font-family: "EB Garamond", Georgia, serif;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .trans-display {
+            font-size: 24px;
+            font-weight: 400;
+            color: #ffffff;
+            font-family: "EB Garamond", serif;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .phonetic {
+            font-size: 16px;
+            color: var(--oed-blue-accent);
+            margin-bottom: 20px;
+            font-family: "Inter", sans-serif;
+            font-weight: 300;
+        }
+
+        .sound-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 400;
+            margin-bottom: 28px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .sound-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--oed-blue-accent);
+        }
+
+        .sound-btn.playing {
+            border-color: var(--oed-gold);
+            color: var(--oed-gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .option-btn {
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+            font-size: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateX(4px);
+        }
+
+        .option-btn.correct {
+            background: var(--success-bg) !important;
+            border-color: var(--success-border) !important;
+            color: #4ade80 !important;
+        }
+
+        .option-btn.wrong {
+            background: var(--danger-bg) !important;
+            border-color: var(--danger-border) !important;
+            color: #f87171 !important;
+        }
+
+        .feedback-banner {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 4px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .feedback-banner.correct-bg {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: #4ade80;
+        }
+
+        .feedback-banner.wrong-bg {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: #f87171;
+        }
+
+        .roots-block {
+            display: block;
+            margin-top: 12px;
+            text-align: left;
+        }
+        .detail-section {
+            display: block;
+            padding: 10px 14px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .detail-section:last-child { margin-bottom: 0; }
+        .example-section {
+            background: rgba(96, 165, 250, 0.08);
+            border-left: 3px solid #60a5fa;
+        }
+        .colloc-section {
+            background: rgba(74, 222, 128, 0.08);
+            border-left: 3px solid #4ade80;
+        }
+        .wordform-section {
+            background: rgba(212, 175, 55, 0.08);
+            border-left: 3px solid var(--oed-gold);
+        }
+        .detail-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .example-section .detail-label { color: #60a5fa; }
+        .colloc-section .detail-label { color: #4ade80; }
+        .wordform-section .detail-label { color: var(--oed-gold); }
+        .detail-text {
+            display: block;
+            font-size: 15px;
+            color: #e2e8f0;
+            line-height: 1.7;
+        }
+        .detail-text.example-text {
+            font-style: italic;
+            font-size: 15px;
+        }
+        .detail-text > div {
+            margin-bottom: 4px;
+        }
+        .detail-text > div:last-child { margin-bottom: 0; }
+        #cardRootsBlock:empty { margin: 0; }
+        #cardRootsBlock { margin: 16px 0 0; }
+
+        .next-btn {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+
+        .next-btn:hover {
+            background: #ffffff;
+            color: #020d1d;
+        }
+
+        .flashcard {
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .trans-hidden {
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 16px;
+            margin-top: 28px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .btn-fail { 
+            background: rgba(239, 68, 68, 0.2); 
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+        }
+        .btn-fail:hover { background: rgba(239, 68, 68, 0.35); }
+
+        .btn-pass { 
+            background: rgba(34, 197, 94, 0.2); 
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #4ade80;
+        }
+        .btn-pass:hover { background: rgba(34, 197, 94, 0.35); }
+
+        .audio-source-note {
+            font-size: 12px;
+            color: var(--oed-blue-accent);
+            margin: 6px 0 0 0;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        /* ---------- 連連看配對模式 ---------- */
+        .match-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .match-dir-btn {
+            width: auto;
+            margin: 0;
+            padding: 8px 16px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .match-dir-btn:hover {
+            border-color: var(--oed-blue-accent);
+        }
+        .match-cols {
+            display: flex;
+            gap: 12px;
+        }
+        .match-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .match-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 4px;
+            padding: 14px 8px;
+            font-size: 13px;
+            text-align: center;
+            cursor: pointer;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.35;
+            color: #e2e8f0;
+            transition: all 0.15s ease;
+        }
+        .match-item:hover:not(.matched) {
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+        .match-item.eng {
+            font-family: "EB Garamond", Georgia, serif;
+            font-size: 17px;
+            color: #ffffff;
+        }
+        .match-item.selected {
+            border-color: var(--oed-gold);
+            background: rgba(212, 175, 55, 0.14);
+            color: var(--oed-gold);
+        }
+        .match-item.matched {
+            border-color: var(--success-border);
+            background: var(--success-bg);
+            color: #4ade80;
+            opacity: 0.6;
+            cursor: default;
+        }
+        .match-item.wrong {
+            border-color: #f87171;
+            background: rgba(239, 68, 68, 0.14);
+            color: #f87171;
+            animation: shakeWrong 0.3s;
+        }
+        @keyframes shakeWrong {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+        .match-done {
+            text-align: center;
+            padding: 30px 10px;
+            animation: fadeIn 0.4s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- 生詞簿管理彈窗 ---------- */
+        .mistake-manage-btn {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
+            padding: 4px 0;
+            font-size: 11px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .mistake-manage-btn:hover {
+            color: var(--oed-blue-accent);
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-panel {
+            background: #06152a;
+            border: 1px solid var(--oed-panel-border);
+            border-radius: 6px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 480px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: "EB Garamond", serif;
+            font-size: 18px;
+            color: #ffffff;
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .modal-close-btn:hover {
+            color: #ffffff;
+        }
+        .modal-body {
+            padding: 12px 20px 20px;
+            overflow-y: auto;
+        }
+        .mistake-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .mistake-row:last-child { border-bottom: none; }
+        .mistake-word {
+            font-family: "EB Garamond", serif;
+            font-size: 17px;
+            color: #ffffff;
+        }
+        .mistake-trans {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .mistake-level {
+            font-size: 10px;
+            color: var(--oed-blue-accent);
+            margin-top: 2px;
+        }
+        .mistake-del-btn {
+            flex-shrink: 0;
+            width: 30px; height: 30px;
+            border-radius: 4px;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .mistake-del-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+<!-- OED 官方詞源時間軸數據光束 SVG 重繪底板 -->
+<div class="oed-burst-bg">
+    <svg class="oed-burst-svg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="300" r="140" stroke="#061833" stroke-width="40"/>
+        <g opacity="0.6">
+            <line x1="200" y1="300" x2="420" y2="120" stroke="#f43f5e" stroke-width="2.5" />
+            <line x1="200" y1="300" x2="480" y2="200" stroke="#fb7185" stroke-width="1.5" />
+            <line x1="200" y1="300" x2="520" y2="300" stroke="#e879f9" stroke-width="3" />
+            <line x1="200" y1="300" x2="490" y2="380" stroke="#38bdf8" stroke-width="2" />
+            <line x1="200" y1="300" x2="430" y2="460" stroke="#818cf8" stroke-width="1" />
+            <line x1="200" y1="300" x2="350" y2="520" stroke="#f43f5e" stroke-width="2" />
+            
+            <circle cx="200" cy="300" r="180" stroke="#fb7185" stroke-width="1" stroke-dasharray="2 10" />
+            <circle cx="200" cy="300" r="220" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 14" />
+            <circle cx="200" cy="300" r="260" stroke="#ffffff" stroke-width="0.8" opacity="0.3" stroke-dasharray="1 8" />
+            <circle cx="200" cy="300" r="290" stroke="#e879f9" stroke-width="1.2" stroke-dasharray="6 20" />
+        </g>
+    </svg>
+</div>
+
+<div class="main-wrapper">
+    <header>
+        <div class="oed-brand">
+            <span class="oed-logo">O E D</span>
+            <div class="oed-divider"></div>
+            <span class="oed-title">Oxford English Dictionary</span>
+        </div>
+        <p class="hero-subtitle" id="heroSubtitle">Core Vocabulary · Ebbinghausian rigour · 內建連連看配對</p>
+        <p class="audio-source-note" id="audioSourceNote">🔊 語音來源偵測中...</p>
+    </header>
+
+    <div id="dataLoaderPanel" class="glass-panel" style="display:none; margin-bottom:16px; padding:20px; text-align:center;">
+        <p id="dataLoaderMsg" style="margin:0 0 12px; color: var(--text-muted); font-size: 14px;">
+            📂 尚未載入詞庫。請選擇（或直接拖曳）一份詞彙 JSON 檔案——<b>檔名不限</b>，不必叫 words.json（格式：word / phonetic / pos / translation / roots 的陣列，任意詞數皆可，每 50 詞自動分為一個單元）。
+        </p>
+        <input type="file" id="wordsFileInput" accept="application/json,.json" onchange="handleWordsFileInput(event)"
+               style="font-size: 14px;">
+        <p id="dataLoaderError" style="color:#e05a5a; font-size:13px; margin-top:10px; display:none;"></p>
+    </div>
+
+    <div id="mainApp" style="display: none;">
+        <div class="glass-panel unit-bar">
+            <div>
+                <label for="unitSelect" style="font-size: 13px; color: var(--text-muted); margin-right: 8px;">單元範疇:</label>
+                <select id="unitSelect" class="unit-select" onchange="onUnitChange()"></select>
+                <button type="button" onclick="showDataLoaderPanel()" style="margin-left:10px; font-size:12px; padding:4px 10px; border-radius:8px; border:1px solid var(--text-muted); background:transparent; color:var(--text-muted); cursor:pointer;">🔄 更換詞庫</button>
+            </div>
+
+            <div class="toggle-group">
+                <label class="toggle-label">
+                    <input type="checkbox" id="reverseCheck" onchange="toggleSetting()">
+                    <span>🔄 中 ➔ 英逆向</span>
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" id="shuffleCheck" onchange="toggleSetting()">
+                    <span>🔀 亂序模式</span>
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" id="cleanTransCheck" checked onchange="toggleSetting()">
+                    <span>📖 COD 精簡釋義</span>
+                </label>
+            </div>
+
+            <div style="font-size: 13px; color: var(--text-muted);" id="unitProgress">進度: 0 / 50</div>
+        </div>
+
+        <div class="mode-nav">
+            <button class="mode-btn active" id="btnModeQuiz" onclick="switchMode('quiz')">🎯 詞義辨析特訓</button>
+            <button class="mode-btn" id="btnModeCard" onclick="switchMode('card')">🎴 雙面卡片記憶</button>
+            <button class="mode-btn" id="btnModeMatch" onclick="switchMode('match')">🔗 連連看配對</button>
+        </div>
+
+        <div class="glass-panel" style="padding: 28px;">
+            <div class="dashboard">
+                <div>已研習詞數: <span class="stat-val" id="statTotal">0</span></div>
+                <div>連續正確: <span class="stat-val" style="color: #4ade80;" id="statStreak">0</span></div>
+                <div class="stat-btn" title="點擊立即複習到期生詞">
+                    <span onclick="startMistakeBook()">💔 生詞簿: <span class="stat-val" style="color: #f87171;" id="statMistakes">0</span></span>
+                    <span id="statDue" style="font-size:11px; color:var(--text-muted); display:block; text-align:center; margin-top:2px;" onclick="startMistakeBook()">今日待複習: 0</span>
+                    <button class="mistake-manage-btn" onclick="event.stopPropagation(); openMistakeManager()">🗑 管理生詞</button>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
+                <button class="mistake-manage-btn" onclick="exportProgress()">💾 備份學習進度</button>
+                <button class="mistake-manage-btn" onclick="document.getElementById('progressFileInput').click()">📂 還原學習進度</button>
+                <input type="file" id="progressFileInput" accept="application/json" style="display:none;" onchange="importProgress(event)">
+            </div>
+
+            <div id="mistakeManagerOverlay" class="modal-overlay" style="display:none;" onclick="if(event.target===this) closeMistakeManager()">
+                <div class="modal-panel">
+                    <div class="modal-header">
+                        <span>💔 生詞簿管理</span>
+                        <button class="modal-close-btn" onclick="closeMistakeManager()">✕</button>
+                    </div>
+                    <div class="modal-body" id="mistakeManagerList"></div>
+                </div>
+            </div>
+
+            <div class="quiz-card" id="cardArea"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ============ 750 詞內嵌詞庫（繁體中文）============ */
+    let WORDS = []; // 詞庫由外部 JSON 檔案載入，見 tryAutoLoadWords() / handleWordsFileInput()
+    // ↓↓↓ 內嵌詞庫：直接寫死在HTML裡，不必每次上傳JSON，桌面版離線也能秒開 ↓↓↓
+    const EMBEDDED_WORDS_DATA = [
+    {
+        "word": "a",
+        "phonetic": "/ə/, 重讀 /eɪ/",
+        "pos": "art.",
+        "translation": "art. 一（個）；任一；每一",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na number of → 許多；若干",
+        "examples": [
+            "I saw a cat in the garden."
+        ]
+    },
+    {
+        "word": "a bit",
+        "phonetic": "",
+        "pos": "phr.",
+        "translation": "一點；有點",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na bit of sth → 一點某物\na bit + adj./adv. → 有點……",
+        "examples": [
+            "Can you speak a bit more slowly?"
+        ]
+    },
+    {
+        "word": "a couple",
+        "phonetic": "",
+        "pos": "phr.",
+        "translation": "一對；幾個；兩個左右",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na couple of sth → 幾個；兩個左右",
+        "examples": [
+            "We waited a couple of minutes."
+        ]
+    },
+    {
+        "word": "a few",
+        "phonetic": "",
+        "pos": "phr.",
+        "translation": "幾個；少數；一些",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na few of sth → ……中的幾個\nquite a few → 相當多",
+        "examples": [
+            "She has a few close friends."
+        ]
+    },
+    {
+        "word": "a little",
+        "phonetic": "",
+        "pos": "phr.",
+        "translation": "一點；稍微",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na little of sth → 一點某物\na little + adj./adv. → 稍微……",
+        "examples": [
+            "Add a little salt to the soup."
+        ]
+    },
+    {
+        "word": "a lot",
+        "phonetic": "",
+        "pos": "phr.",
+        "translation": "許多；很；非常",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\na lot of sth → 許多某物\na lot more → 多得多",
+        "examples": [
+            "He reads a lot of books."
+        ]
+    },
+    {
+        "word": "abandon",
+        "phonetic": "/əˈbæn.dən/",
+        "pos": "vt.",
+        "translation": "vt. 放棄；拋棄；遺棄",
+        "roots": "Word formation: 源自古法語 abandoner，與「任由；放手」有關；不作現代 ab- + band + -on 硬拆\nCommon collocations:\nabandon a plan → 放棄計畫\nabandon an attempt → 放棄嘗試\nabandon hope → 放棄希望",
+        "examples": [
+            "The sailors had to abandon the sinking ship."
+        ]
+    },
+    {
+        "word": "abandoned",
+        "phonetic": "/əˈbæn.dənd/",
+        "pos": "adj.",
+        "translation": "adj. 被遺棄的；荒廢的；放棄的",
+        "roots": "abandon + -ed(形容詞後綴)\nCommon collocations:\nabandoned building → 廢棄建築\nabandoned vehicle → 被遺棄的車輛",
+        "examples": [
+            "They found an abandoned house on the hill."
+        ]
+    },
+    {
+        "word": "ability",
+        "phonetic": "/əˈbɪl.ə.ti/",
+        "pos": "n.",
+        "translation": "n. 能力；才能",
+        "roots": "abil(能夠的)+ -ity(名詞後綴,表性質)\nCommon collocations:\nability to do sth → 做某事的能力\nhave the ability to → 有能力……\ndevelop one’s ability → 發展能力",
+        "examples": [
+            "She has the ability to learn languages quickly."
+        ]
+    },
+    {
+        "word": "able",
+        "phonetic": "/ˈeɪ.bəl/",
+        "pos": "adj.",
+        "translation": "adj. 能夠的；有能力的；能幹的",
+        "roots": "Word formation: 源自拉丁語 habilis「容易處理的；有能力的」；不作 able 的現代字面拆解\nCommon collocations:\nbe able to do sth → 能夠做某事",
+        "examples": [
+            "He wasn't able to finish the race."
+        ]
+    },
+    {
+        "word": "about",
+        "phonetic": "/əˈbaʊt/",
+        "pos": "prep.; adv.; adj.",
+        "translation": "prep. 關於；在……周圍；大約\nadv. 大約；到處；四處\nadj. 四處活動的",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nabout to do sth → 即將做某事\nabout sth → 關於某事",
+        "examples": [
+            "The book is about the history of Rome."
+        ]
+    },
+    {
+        "word": "above",
+        "phonetic": "/əˈbʌv/",
+        "pos": "prep.; adv.; adj.",
+        "translation": "prep. 在……上方；超出；高於\nadv. 在上面；在上文\nadj. 上述的；以上的",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nabove average → 高於平均水平\nabove all → 最重要的是\nas mentioned above → 如上所述",
+        "examples": [
+            "The plane flew above the clouds."
+        ]
+    },
+    {
+        "word": "abroad",
+        "phonetic": "/əˈbrɔːd/",
+        "pos": "adv.; adj.",
+        "translation": "adv. 在國外；到國外\nadj. 在國外的；海外的",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nstudy abroad → 出國留學\ngo abroad → 出國\nlive abroad → 居住海外",
+        "examples": [
+            "My sister is studying abroad this year."
+        ]
+    },
+    {
+        "word": "absence",
+        "phonetic": "/ˈæb.səns/",
+        "pos": "n.",
+        "translation": "n. 缺席；不在；缺乏",
+        "roots": "ab-(不,離開)+sence(=esse存在)→ 不在場\nCommon collocations:\nabsence of sth → 缺乏某物\nin the absence of → 在缺乏……的情況下\nduring sb’s absence → 某人缺席期間",
+        "examples": [
+            "His absence from the meeting surprised everyone."
+        ]
+    },
+    {
+        "word": "absent",
+        "phonetic": "/ˈæb.sənt/",
+        "pos": "adj.; v.",
+        "translation": "adj. 缺席的；不在的；心不在焉的\nv. 缺席",
+        "roots": "ab-(不,離開)+sent(=esse存在)→ 不在場的\nCommon collocations:\nbe absent from → 缺席\nabsent from school/work → 缺課／缺勤\nabsent-minded → 心不在焉的",
+        "examples": [
+            "Three students were absent from class today."
+        ]
+    },
+    {
+        "word": "absolute",
+        "phonetic": "/ˈæb.sə.luːt/",
+        "pos": "adj.; n.",
+        "translation": "adj. 絕對的；完全的；不受限制的\nn. 絕對事物",
+        "roots": "ab-(徹底)+solut(解開,鬆開)→ 不受限制的 → 絕對的\nCommon collocations:\nabsolute certainty → 絕對確定\nabsolute majority → 絕對多數\nabsolute freedom → 絕對自由",
+        "examples": [
+            "There was absolute silence in the room."
+        ]
+    },
+    {
+        "word": "absolutely",
+        "phonetic": "/ˈæb.sə.luːt.li/",
+        "pos": "adv.",
+        "translation": "adv. 完全地；絕對地；毫無疑問地",
+        "roots": "absolute + -ly(副詞後綴)\nCommon collocations:\nabsolutely essential → 絕對必要\nabsolutely no → 完全沒有\nabsolutely certain → 完全確定",
+        "examples": [
+            "I absolutely agree with your idea."
+        ]
+    },
+    {
+        "word": "absorb",
+        "phonetic": "/əbˈzɔːb/",
+        "pos": "vt.",
+        "translation": "vt. 吸收；吸納；使全神貫注",
+        "roots": "ab-(向)+sorb(吸)→ 吸入\nCommon collocations:\nabsorb information → 吸收資訊\nabsorb nutrients → 吸收營養\nbe absorbed in → 全神貫注於",
+        "examples": [
+            "Plants absorb water through their roots."
+        ]
+    },
+    {
+        "word": "abuse",
+        "phonetic": "/əˈbjuːs/(n.), /əˈbjuːz/(v.)",
+        "pos": "n.; vt.",
+        "translation": "n. 濫用;虐待;辱罵\nvt. 濫用;虐待;辱罵",
+        "roots": "ab-(不正當地)+use(使用)→ 濫用\nCommon collocations:\ndrug abuse → 濫用毒品\nalcohol abuse → 酒精濫用\nabuse power → 濫用權力\nchild abuse → 虐待兒童",
+        "examples": [
+            "The report describes cases of animal abuse."
+        ]
+    },
+    {
+        "word": "academic",
+        "phonetic": "/ˌæk.əˈdem.ɪk/",
+        "pos": "adj.; n.",
+        "translation": "adj. 學術的；學業的；理論上的\nn. 學者；大學教師",
+        "roots": "源自希臘語 Academy(柏拉圖學院)→ 學術的\nCommon collocations:\nacademic research → 學術研究\nacademic performance → 學業表現\nacademic achievement → 學業成就",
+        "examples": [
+            "She has a strong academic record."
+        ]
+    },
+    {
+        "word": "accent",
+        "phonetic": "/ˈæk.sənt/",
+        "pos": "n.; vt.",
+        "translation": "n. 口音;重音\nvt. 強調",
+        "roots": "ac-(=ad,向)+cent(=cantus唱,聲調)→ 重讀音\nCommon collocations:\nforeign accent → 外國口音\nregional accent → 地區口音",
+        "examples": [
+            "He speaks English with a French accent."
+        ]
+    },
+    {
+        "word": "accept",
+        "phonetic": "/əkˈsept/",
+        "pos": "vt.",
+        "translation": "vt. 接受；認可；同意；承認",
+        "roots": "ac-(=ad,向)+cept(=capere拿,取)→ 接受\nCommon collocations:\naccept responsibility → 承擔責任\naccept an offer → 接受提議\naccept the fact that → 接受……這一事實",
+        "examples": [
+            "I'm happy to accept your invitation."
+        ]
+    },
+    {
+        "word": "acceptable",
+        "phonetic": "/əkˈsep.tə.bəl/",
+        "pos": "adj.",
+        "translation": "adj. 可接受的；令人滿意的；合乎要求的",
+        "roots": "accept + -able(可…的)\nCommon collocations:\nacceptable level → 可接受的水平\nacceptable standard → 可接受的標準\nsocially acceptable → 社會可接受的",
+        "examples": [
+            "This behaviour is not acceptable at work."
+        ]
+    },
+    {
+        "word": "access",
+        "phonetic": "/ˈæk.ses/",
+        "pos": "n.; vt.",
+        "translation": "n. 通道；入口；使用權；接觸機會\nvt. 進入；使用；存取",
+        "roots": "ac-(=ad,向)+cess(=cedere走,行)→ 走向,通道\nCommon collocations:\naccess to sth → 使用／接觸某物的機會或權利\nhave access to → 有權使用／接觸\ngain access to → 獲得使用／進入……的機會\nprovide access to → 提供……的途徑／機會",
+        "examples": [
+            "Students have access to the library after school."
+        ]
+    },
+    {
+        "word": "accident",
+        "phonetic": "/ˈæk.sɪ.dənt/",
+        "pos": "n.",
+        "translation": "n. 事故;意外(事件)",
+        "roots": "ac-(=ad)+cid(=cadere落下)+ent → 突然發生的事 → 事故\nCommon collocations:\nroad accident → 道路事故\ntraffic accident → 交通事故\nby accident → 偶然地\naccident prevention → 事故預防",
+        "examples": [
+            "There was a car accident on the highway."
+        ]
+    },
+    {
+        "word": "accidental",
+        "phonetic": "/ˌæk.sɪˈden.təl/",
+        "pos": "adj.",
+        "translation": "a. 意外的;偶然的",
+        "roots": "accident + -al(形容詞後綴)\nCommon collocations:\naccidental damage → 意外損害\naccidental discovery → 偶然發現\naccidental death → 意外死亡",
+        "examples": [
+            "The fire was caused by accidental damage."
+        ]
+    },
+    {
+        "word": "accidentally",
+        "phonetic": "/ˌæk.sɪˈden.tə.li/",
+        "pos": "adv.",
+        "translation": "adv. 偶然地;意外地",
+        "roots": "accidental + -ly(副詞後綴)\nCommon collocations:\nhappen accidentally → 意外發生\nbe accidentally damaged → 意外受損",
+        "examples": [
+            "I accidentally deleted the file."
+        ]
+    },
+    {
+        "word": "accommodation",
+        "phonetic": "/əˌkɒm.əˈdeɪ.ʃən/",
+        "pos": "n.",
+        "translation": "n. 住宿",
+        "roots": "ac-(=ad)+commod(適合,方便)+ation → 使適合 → 住宿安排\nCommon collocations:\naccommodation costs → 住宿費用\nstudent accommodation → 學生住宿\nprovide accommodation → 提供住宿\nfind accommodation → 找住宿",
+        "examples": [
+            "The hotel offers cheap accommodation for students."
+        ]
+    },
+    {
+        "word": "accompany",
+        "phonetic": "/əˈkʌm.pə.ni/",
+        "pos": "vt.",
+        "translation": "vt. 陪伴;伴隨;為...伴奏\nvi. 伴奏",
+        "roots": "ac-(=ad)+com(共同)+pany(=panis麵包,夥伴)→ 陪伴\nCommon collocations:\naccompany sb → 陪伴某人\nbe accompanied by → 由……陪同／伴隨\naccompany sth with sth → 以某物伴隨某物",
+        "examples": [
+            "A friend will accompany me to the hospital."
+        ]
+    },
+    {
+        "word": "according to",
+        "phonetic": "",
+        "pos": "prep. phr.",
+        "translation": "根據;按照",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\naccording to the report → 根據報告\naccording to research → 根據研究\naccording to data → 根據數據",
+        "examples": [
+            "According to the weather forecast, it will rain tomorrow."
+        ]
+    },
+    {
+        "word": "account",
+        "phonetic": "/əˈkaʊnt/",
+        "pos": "n.; vi.",
+        "translation": "n. 帳戶；描述；報告；比例\nvi. 解釋；佔（比例）",
+        "roots": "ac-(=ad)+count(計數)→ 計算,記賬\nCommon collocations:\naccount for sth → 解釋某事；佔（比例）\ntake sth into account → 把某事考慮在內\non account of → 因為；由於\ngive an account of → 描述；報告",
+        "examples": [
+            "Please open a bank account before you travel."
+        ]
+    },
+    {
+        "word": "accurate",
+        "phonetic": "/ˈæk.jə.rət/",
+        "pos": "adj.",
+        "translation": "a. 準確的;精確的",
+        "roots": "ac-(=ad)+cur(關心,留意)+ate → 仔細核對的 → 精確的\nCommon collocations:\naccurate information → 準確資訊\naccurate measurement → 精確測量\nhighly accurate → 高度準確",
+        "examples": [
+            "The map gives an accurate picture of the area."
+        ]
+    },
+    {
+        "word": "accurately",
+        "phonetic": "/ˈæk.jə.rət.li/",
+        "pos": "adv.",
+        "translation": "adv. 準確地;精確地",
+        "roots": "accurate + -ly(副詞後綴)\nCommon collocations:\naccurately measure → 精確測量\naccurately reflect → 準確反映\naccurately describe → 準確描述",
+        "examples": [
+            "He described the accident accurately."
+        ]
+    },
+    {
+        "word": "accuse",
+        "phonetic": "/əˈkjuːz/",
+        "pos": "vt.",
+        "translation": "vt. 指責;控告\nvi. 指責,控告",
+        "roots": "ac-(=ad)+cuse(=causa原因,案由)→ 起訴\nCommon collocations:\naccuse sb of sth → 指控某人某事\nbe accused of → 被指控……\nfalsely accuse → 錯誤指控",
+        "examples": [
+            "They accused him of stealing the money."
+        ]
+    },
+    {
+        "word": "achieve",
+        "phonetic": "/əˈtʃiːv/",
+        "pos": "vt.",
+        "translation": "vt. 實現；達到；完成；取得",
+        "roots": "a-(=ad)+chieve(=chief頭,端點)→ 到達終點 → 實現\nCommon collocations:\nachieve a goal → 達成目標\nachieve success → 取得成功\nachieve results → 取得成果",
+        "examples": [
+            "She worked hard to achieve her goal."
+        ]
+    },
+    {
+        "word": "achievement",
+        "phonetic": "/əˈtʃiːv.mənt/",
+        "pos": "n.",
+        "translation": "n. 成就;成績",
+        "roots": "achieve + -ment(名詞後綴)\nCommon collocations:\nacademic achievement → 學業成就\nmajor achievement → 重大成就\na sense of achievement → 成就感",
+        "examples": [
+            "Winning the prize was a great achievement."
+        ]
+    },
+    {
+        "word": "acid",
+        "phonetic": "/ˈæs.ɪd/",
+        "pos": "n.; adj.",
+        "translation": "n. 酸\na. 酸的;尖酸刻薄的",
+        "roots": "acid(=acidus酸的,源自acere發酸)\nCommon collocations:\nacid rain → 酸雨\nacidic soil → 酸性土壤\nacid concentration → 酸濃度",
+        "examples": [
+            "Lemon juice contains citric acid."
+        ]
+    },
+    {
+        "word": "acknowledge",
+        "phonetic": "/əkˈnɒl.ɪdʒ/",
+        "pos": "vt.",
+        "translation": "vt. 承認；認可；告知收悉",
+        "roots": "ac-(=ad)+knowledge(知道)→ 承認知曉\nCommon collocations:\nacknowledge the fact that → 承認……這一事實\nacknowledge a problem → 承認問題\nacknowledge receipt of → 告知收到……",
+        "examples": [
+            "He acknowledged his mistake and apologised."
+        ]
+    },
+    {
+        "word": "acquire",
+        "phonetic": "/əˈkwaɪə(r)/",
+        "pos": "vt.",
+        "translation": "vt. 獲得；取得；學到；習得",
+        "roots": "ac-(=ad)+quire(=quaerere尋求)→ 求得,獲得\nCommon collocations:\nacquire knowledge → 獲取知識\nacquire skills → 掌握技能\nacquire a language → 習得語言",
+        "examples": [
+            "The company plans to acquire a smaller business."
+        ]
+    },
+    {
+        "word": "across",
+        "phonetic": "/əˈkrɒs/",
+        "pos": "prep.; adv.",
+        "translation": "prep. 穿過;橫過;在...對面\nadv. 到對岸;寬為",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nacross the world → 全世界\nacross the country → 全國各地\nacross from → 在……對面",
+        "examples": [
+            "There is a bridge across the river.",
+            "She looked across the street and waved."
+        ]
+    },
+    {
+        "word": "act",
+        "phonetic": "/ækt/",
+        "pos": "n.; vi.; vt.",
+        "translation": "n. 行為,行動;法案;(戲劇的)幕\nvi. 行動;表現;表演\nvt. 扮演",
+        "roots": "act(=agere/actus做,行動)\nCommon collocations:\ntake action → 採取行動\nact as → 擔任；起……作用\nact on → 根據……採取行動／對……產生作用",
+        "examples": [
+            "The government must act quickly to stop the flood."
+        ]
+    },
+    {
+        "word": "action",
+        "phonetic": "/ˈæk.ʃən/",
+        "pos": "n.",
+        "translation": "n. 行動；行為；作用",
+        "roots": "act(行動)+ -ion(名詞後綴)\nCommon collocations:\ntake action → 採取行動\nhuman action → 人類行為\ncriminal action → 犯罪行為\nthe action of a drug → 藥物作用",
+        "examples": [
+            "The film is full of action and adventure."
+        ]
+    },
+    {
+        "word": "active",
+        "phonetic": "/ˈæk.tɪv/",
+        "pos": "adj.; n.",
+        "translation": "a. 活躍的;積極的;主動的\nn. (語法)主動語態",
+        "roots": "act(行動)+ -ive(形容詞後綴,有…性質的)\nCommon collocations:\nactive role → 積極作用／角色\nactive participation → 積極參與\ntake an active part in → 積極參與",
+        "examples": [
+            "My grandmother is still very active."
+        ]
+    },
+    {
+        "word": "actively",
+        "phonetic": "/ˈæk.tɪv.li/",
+        "pos": "adv.",
+        "translation": "adv. 積極地;主動地",
+        "roots": "active + -ly(副詞後綴)\nCommon collocations:\nactively participate in → 積極參與\nactively seek → 積極尋求\nactively involved in → 積極參與……",
+        "examples": [
+            "She is actively looking for a new job."
+        ]
+    },
+    {
+        "word": "activity",
+        "phonetic": "/ækˈtɪv.ə.ti/",
+        "pos": "n.",
+        "translation": "n. 活動;行動",
+        "roots": "active + -ity(名詞後綴)\nCommon collocations:\nphysical activity → 身體活動\neconomic activity → 經濟活動\nhuman activity → 人類活動",
+        "examples": [
+            "Swimming is a good outdoor activity."
+        ]
+    },
+    {
+        "word": "actor",
+        "phonetic": "/ˈæk.tər/",
+        "pos": "n.",
+        "translation": "n. 演員",
+        "roots": "act(表演,行動)+ -or(名詞後綴,表人)\nCommon collocations:\nkey actor → 關鍵參與者\npolitical actor → 政治參與者\nmajor actor → 主要參與者",
+        "examples": [
+            "He became a famous actor after that film."
+        ]
+    },
+    {
+        "word": "actual",
+        "phonetic": "/ˈæk.tʃu.əl/",
+        "pos": "adj.",
+        "translation": "a. 實際的;真實的",
+        "roots": "act(=actus已做的,實際的)+ -ual(形容詞後綴)\nCommon collocations:\nactual cost → 實際成本\nactual number → 實際數量\nactual situation → 實際情況",
+        "examples": [
+            "The actual cost was higher than we expected."
+        ]
+    },
+    {
+        "word": "actually",
+        "phonetic": "/ˈæk.tʃu.ə.li/",
+        "pos": "adv.",
+        "translation": "adv. 實際上;事實上;竟然",
+        "roots": "actual + -ly(副詞後綴)\nCommon collocations:\nactually occur → 實際發生\nactually exist → 實際存在\nin actual fact → 事實上",
+        "examples": [
+            "I thought it would rain, but actually the sun came out."
+        ]
+    },
+    {
+        "word": "ad",
+        "phonetic": "/æd/",
+        "pos": "n.",
+        "translation": "n. 廣告(advertisement 的縮寫)",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nonline ad → 網路廣告\nclassified ad → 分類廣告",
+        "examples": [
+            "I saw an ad for a new phone on TV."
+        ]
+    },
+    {
+        "word": "adapt",
+        "phonetic": "/əˈdæpt/",
+        "pos": "vt.; vi.",
+        "translation": "vt. 使適應;改編\nvi. 適應",
+        "roots": "ad-(向,朝)+apt(合適的)→ 使合適 → 適應\nCommon collocations:\nadapt to sth → 適應某事物\nadapt to change → 適應變化\nadapt sth for → 為……改編某物",
+        "examples": [
+            "Animals adapt to their environment over time."
+        ]
+    },
+    {
+        "word": "add",
+        "phonetic": "/æd/",
+        "pos": "vt.; vi.",
+        "translation": "vt. 增加;添加\nvi. 做加法",
+        "roots": "Word formation: 源自拉丁語 addere「加上」\nCommon collocations:\nadd to sth → 增加某事物\nadd sth to sth → 把某物加到某物中\nadd value to → 增加……的價值",
+        "examples": [
+            "Please add your name to the list."
+        ]
+    },
+    {
+        "word": "addition",
+        "phonetic": "/əˈdɪʃ.ən/",
+        "pos": "n.",
+        "translation": "n. 加法;增加的人(或物)",
+        "roots": "add + -ition(名詞後綴)\nCommon collocations:\nin addition to → 除……之外\nin addition → 此外\nan addition to → ……的新增部分",
+        "examples": [
+            "In addition to English, she speaks French."
+        ]
+    },
+    {
+        "word": "additional",
+        "phonetic": "/əˈdɪʃ.ən.əl/",
+        "pos": "adj.",
+        "translation": "a. 附加的;另外的;額外的",
+        "roots": "addition + -al(形容詞後綴)\nCommon collocations:\nadditional information → 額外資訊\nadditional cost → 額外成本\nadditional evidence → 額外證據",
+        "examples": [
+            "The hotel charges an additional fee for breakfast."
+        ]
+    },
+    {
+        "word": "address",
+        "phonetic": "/əˈdres/",
+        "pos": "n.; vt.",
+        "translation": "n. 地址；演說\nvt. 發表（演說）；處理；應對；寫地址",
+        "roots": "ad-(向)+dress(整理,指向)→ 指向目標 → 地址;應對\nCommon collocations:\naddress a problem → 處理問題\naddress an issue → 處理議題\naddress the needs of → 滿足／應對……的需求\ndeliver an address → 發表演說",
+        "examples": [
+            "Can you tell me your home address?"
+        ]
+    },
+    {
+        "word": "adequate",
+        "phonetic": "/ˈæd.ɪ.kwət/",
+        "pos": "adj.",
+        "translation": "adj. 適當的；足夠的；能滿足需求的",
+        "roots": "ad-(向)+equ(相等)+ate → 與需求相等 → 足夠的\nCommon collocations:\nadequate for sth → 足以應付某事物\nadequate resources → 足夠資源\nadequate protection → 充分保護",
+        "examples": [
+            "The team didn't have adequate time to prepare."
+        ]
+    },
+    {
+        "word": "adequately",
+        "phonetic": "/ˈæd.ɪ.kwət.li/",
+        "pos": "adv.",
+        "translation": "adv. 足夠地;適當地",
+        "roots": "adequate + -ly(副詞後綴)\nCommon collocations:\nadequately address → 充分處理\nadequately protect → 充分保護\nadequately equipped → 配備充足",
+        "examples": [
+            "The room was not adequately heated."
+        ]
+    },
+    {
+        "word": "adjust",
+        "phonetic": "/əˈdʒʌst/",
+        "pos": "vt.; vi.",
+        "translation": "vt. 調整；使適應\nvi. 適應；調節",
+        "roots": "ad-(向)+just(公正,正確)→ 調整至正確\nCommon collocations:\nadjust to sth → 適應某事物\nadjust the level → 調整水平\nadjust to change → 適應變化",
+        "examples": [
+            "It took me a while to adjust to the new schedule."
+        ]
+    },
+    {
+        "word": "admiration",
+        "phonetic": "/ˌæd.məˈreɪ.ʃən/",
+        "pos": "n.",
+        "translation": "n. 欽佩;讚賞",
+        "roots": "ad-(向)+mir(=mirari驚奇,注視)→ 注目而生敬意\nCommon collocations:\nadmiration for sb/sth → 對某人／某事物的欽佩\nexpress admiration → 表達欽佩",
+        "examples": [
+            "I have great admiration for her courage."
+        ]
+    },
+    {
+        "word": "admire",
+        "phonetic": "/ədˈmaɪər/",
+        "pos": "vt.",
+        "translation": "vt. 欽佩;讚美;愛慕",
+        "roots": "ad-(向)+mire(=mirari注視,驚奇)→ 欽佩\nCommon collocations:\nadmire sb for sth → 因某事而欽佩某人\nadmire the beauty of → 欣賞……的美",
+        "examples": [
+            "I really admire people who help others."
+        ]
+    },
+    {
+        "word": "admit",
+        "phonetic": "/ədˈmɪt/",
+        "pos": "vt.",
+        "translation": "vt. 承認；準許進入；容納",
+        "roots": "ad-(向)+mit(=mittere送,放)→ 放入 → 準許進入\nCommon collocations:\nadmit that → 承認……\nadmit to sth → 承認某事\nbe admitted to → 被准許進入／被錄取",
+        "examples": [
+            "He finally admitted that he was wrong."
+        ]
+    },
+    {
+        "word": "adopt",
+        "phonetic": "/əˈdɒpt/",
+        "pos": "vt.",
+        "translation": "vt. 採用；正式通過；收養",
+        "roots": "ad-(向)+opt(=optare選擇)→ 選定採納\nCommon collocations:\nadopt a policy → 採取政策\nadopt an approach → 採用方法\nadopt measures → 採取措施",
+        "examples": [
+            "They decided to adopt a child from another country."
+        ]
+    },
+    {
+        "word": "adult",
+        "phonetic": "/ˈæd.ʌlt/",
+        "pos": "n.; adj.",
+        "translation": "n. 成年人\na. 成年的;成熟的",
+        "roots": "ad-(向)+ult(=alescere生長)→ 長成 → 成年的\nCommon collocations:\nadult population → 成年人口\nadult education → 成人教育\nyoung adult → 年輕成年人",
+        "examples": [
+            "This film is not suitable for children, only adults."
+        ]
+    },
+    {
+        "word": "advance",
+        "phonetic": "/ədˈvɑːns/",
+        "pos": "n.; vi.; vt.; adj.",
+        "translation": "n. 前進；進展；預付款\nvi. 前進；提高；上漲\nvt. 促進；提出；預付\nadj. 預先的",
+        "roots": "ad-(向)+vance(=ante在前)→ 向前 → 前進\nCommon collocations:\nadvance knowledge → 推進知識\nadvance rapidly → 快速進展\nin advance → 提前\nadvance payment → 預付款",
+        "examples": [
+            "You should book your ticket in advance."
+        ]
+    },
+    {
+        "word": "advanced",
+        "phonetic": "/ədˈvɑːnst/",
+        "pos": "adj.",
+        "translation": "a. 先進的;高級的",
+        "roots": "advance + -ed(形容詞後綴)\nCommon collocations:\nadvanced technology → 先進技術\nadvanced stage → 晚期／先進階段\nadvanced research → 前沿研究",
+        "examples": [
+            "This is an advanced English class."
+        ]
+    },
+    {
+        "word": "advantage",
+        "phonetic": "/ədˈvɑːn.tɪdʒ/",
+        "pos": "n.; vt.",
+        "translation": "n. 優勢；好處；優點\nvt. 有助於",
+        "roots": "ad-(向)+vantage(=avant前面)→ 處於前列 → 優勢\nCommon collocations:\nhave an advantage over → 比……有優勢\ntake advantage of → 利用\ncompetitive advantage → 競爭優勢",
+        "examples": [
+            "Living near the city has many advantages."
+        ]
+    },
+    {
+        "word": "adventure",
+        "phonetic": "/ədˈven.tʃər/",
+        "pos": "n.; v.",
+        "translation": "n. 冒險;冒險經歷\nv. 冒險",
+        "roots": "ad-(向)+vent(=venire來)→ 即將發生之事 → 冒險\nCommon collocations:\nadventure tourism → 冒險旅遊\nan exciting adventure → 刺激的冒險經歷",
+        "examples": [
+            "We had an exciting adventure in the mountains."
+        ]
+    },
+    {
+        "word": "advertise",
+        "phonetic": "/ˈæd.və.taɪz/",
+        "pos": "vt.; vi.",
+        "translation": "vt. 為...做廣告;宣傳\nvi. 做廣告",
+        "roots": "ad-(向)+vert(轉向)→ 使人注意 → 做廣告\nCommon collocations:\nadvertise a product → 為產品做廣告\nadvertise on television → 在電視上做廣告\nadvertise for sth → 登廣告尋找某物",
+        "examples": [
+            "The company will advertise the new product on TV."
+        ]
+    },
+    {
+        "word": "advertisement",
+        "phonetic": "/ədˈvɜː.tɪs.mənt/",
+        "pos": "n.",
+        "translation": "n. 廣告;啟事",
+        "roots": "advertise + -ment(名詞後綴)\nCommon collocations:\ntelevision advertisement → 電視廣告\nclassified advertisement → 分類廣告\nadvertisement for sth → ……的廣告",
+        "examples": [
+            "I saw an advertisement for a summer job."
+        ]
+    },
+    {
+        "word": "advertising",
+        "phonetic": "/ˈæd.və.taɪ.zɪŋ/",
+        "pos": "n.; adj.",
+        "translation": "n. 廣告(業)\na. 廣告的",
+        "roots": "advertise + -ing\nCommon collocations:\nadvertising campaign → 廣告活動\nadvertising industry → 廣告業\nonline advertising → 網路廣告",
+        "examples": [
+            "She works in the advertising industry."
+        ]
+    },
+    {
+        "word": "advice",
+        "phonetic": "/ədˈvaɪs/",
+        "pos": "n.",
+        "translation": "n. 建議;忠告",
+        "roots": "ad-(向)+vice(=videre看)→ 提出看法 → 建議\nCommon collocations:\ngive advice → 提供建議\nseek advice → 尋求建議\nadvice on sth → 關於某事的建議\ntake sb’s advice → 採納某人的建議",
+        "examples": [
+            "Can you give me some advice about my career?"
+        ]
+    },
+    {
+        "word": "advise",
+        "phonetic": "/ədˈvaɪz/",
+        "pos": "vt.",
+        "translation": "vt. 建議;勸告;通知\nvi. 提意見,商量",
+        "roots": "ad-(向)+vise(=videre看)→ 建議\nCommon collocations:\nadvise sb to do sth → 建議某人做某事\nadvise against sth → 建議不要做某事\nadvise sb of sth → 通知某人某事",
+        "examples": [
+            "The doctor advised me to rest for a week."
+        ]
+    },
+    {
+        "word": "affair",
+        "phonetic": "/əˈfeər/",
+        "pos": "n.",
+        "translation": "n. 事情;事務;(尤指婚外)風流韻事",
+        "roots": "Word formation: 源自法語 à faire「去做」→ 要做的事情 → 事務\nCommon collocations:\npublic affairs → 公共事務\nforeign affairs → 外交事務\ncurrent affairs → 時事",
+        "examples": [
+            "The magazine published an article about the political affair."
+        ]
+    },
+    {
+        "word": "affect",
+        "phonetic": "/əˈfekt/",
+        "pos": "vt.",
+        "translation": "vt. 影響；對……產生作用；感動",
+        "roots": "af-(=ad,向)+fect(=facere做)→ 施加作用於 → 影響\nCommon collocations:\naffect the way → 影響……的方式\naffect people’s lives → 影響人們的生活\nadversely affect → 對……產生不利影響",
+        "examples": [
+            "The weather can affect your mood."
+        ]
+    },
+    {
+        "word": "affection",
+        "phonetic": "/əˈfek.ʃən/",
+        "pos": "n.",
+        "translation": "n. 喜愛;感情",
+        "roots": "affect + -ion(名詞後綴)\nCommon collocations:\naffection for sb → 對某人的喜愛\nshow affection → 表達愛意／感情",
+        "examples": [
+            "She showed great affection towards her pets."
+        ]
+    },
+    {
+        "word": "afford",
+        "phonetic": "/əˈfɔːd/",
+        "pos": "vt.",
+        "translation": "vt. 負擔得起；提供；給予",
+        "roots": "Word formation: 源自古英語相關形式，現代詞義已詞彙化；不作現代字面硬拆\nCommon collocations:\nafford to do sth → 負擔得起做某事\ncannot afford to → 無法承受／負擔不起\nafford an opportunity → 提供機會",
+        "examples": [
+            "We can't afford a new car this year."
+        ]
+    },
+    {
+        "word": "afraid",
+        "phonetic": "/əˈfreɪd/",
+        "pos": "adj.",
+        "translation": "a. 害怕的;擔心的,恐怕",
+        "roots": "Word formation: 源自古英語 ofrædan「恐懼」；不作現代字面硬拆\nCommon collocations:\nbe afraid of → 害怕\nbe afraid to do sth → 害怕做某事\nI’m afraid that → 恐怕……",
+        "examples": [
+            "Don't be afraid to ask questions."
+        ]
+    },
+    {
+        "word": "after",
+        "phonetic": "/ˈɑːf.tər/",
+        "pos": "prep.; conj.; adv.; adj.",
+        "translation": "prep. 在...之後;由於\nconj. 在...之後\nadv. 後來",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nafter all → 畢竟\nshortly after → 不久之後\nday after day → 日復一日",
+        "examples": [
+            "We went home after the movie."
+        ]
+    },
+    {
+        "word": "afternoon",
+        "phonetic": "/ˌɑːf.təˈnuːn/",
+        "pos": "n.",
+        "translation": "n. 下午",
+        "roots": "after(之後)+noon(正午)→ 下午\nCommon collocations:\nin the afternoon → 在下午\nthis afternoon → 今天下午\nlate afternoon → 下午晚些時候",
+        "examples": [
+            "Let's meet at three in the afternoon."
+        ]
+    },
+    {
+        "word": "afterwards",
+        "phonetic": "/ˈɑːf.tə.wədz/",
+        "pos": "adv.",
+        "translation": "adv. 後來;然後",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nshortly afterwards → 不久之後\nsoon afterwards → 很快之後",
+        "examples": [
+            "We had dinner and went for a walk afterwards."
+        ]
+    },
+    {
+        "word": "again",
+        "phonetic": "/əˈgen/",
+        "pos": "adv.",
+        "translation": "adv. 再一次;又",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nonce again → 再一次\nagain and again → 一再\ntry again → 再試一次",
+        "examples": [
+            "Could you say that again, please?"
+        ]
+    },
+    {
+        "word": "against",
+        "phonetic": "/əˈgenst/",
+        "pos": "prep.",
+        "translation": "prep. 反對;倚靠;對著",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nagainst the law → 違法\nagainst the background of → 在……背景下",
+        "examples": [
+            "The team played against a strong opponent."
+        ]
+    },
+    {
+        "word": "age",
+        "phonetic": "/eɪdʒ/",
+        "pos": "n.; v.",
+        "translation": "n. 年齡;時代,時期\nv. 變老,成熟",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nat the age of → 在……歲時\nage group → 年齡組\nage rapidly → 快速老化",
+        "examples": [
+            "Children of all ages enjoyed the show."
+        ]
+    },
+    {
+        "word": "aged",
+        "phonetic": "…歲的 /eɪdʒd/;年老的 /ˈeɪ.dʒɪd/",
+        "pos": "adj.",
+        "translation": "a. 老的;...歲的",
+        "roots": "age + -ed(形容詞後綴)\nCommon collocations:\naged between A and B → 年齡介於 A 與 B 之間\naged population → 老年人口\npeople aged 65 and over → 65 歲及以上人口",
+        "examples": [
+            "The wine is aged for ten years."
+        ]
+    },
+    {
+        "word": "agency",
+        "phonetic": "/ˈeɪ.dʒən.si/",
+        "pos": "n.",
+        "translation": "n. 代理機構;中介",
+        "roots": "agent + -cy(名詞後綴,表機構)\nCommon collocations:\ngovernment agency → 政府機構\ntravel agency → 旅行社\nagency responsible for → 負責……的機構",
+        "examples": [
+            "She works for a travel agency."
+        ]
+    },
+    {
+        "word": "agent",
+        "phonetic": "/ˈeɪ.dʒənt/",
+        "pos": "n.",
+        "translation": "n. 代理人;代表",
+        "roots": "ag(=agere做,驅動)+ -ent(名詞後綴,表人)→ 行動者\nCommon collocations:\ngovernment agent → 政府代理人\nestate agent → 房地產經紀人\ncausal agent → 致因",
+        "examples": [
+            "The estate agent showed us three houses."
+        ]
+    },
+    {
+        "word": "aggressive",
+        "phonetic": "/əˈgres.ɪv/",
+        "pos": "adj.",
+        "translation": "a. 侵略性的;好鬥的;有進取心的",
+        "roots": "ag-(=ad,向)+gress(=gradi走)+ive → 向前逼近的 → 侵略性的\nCommon collocations:\naggressive behaviour → 攻擊性行為\naggressive marketing → 強勢行銷\naggressive approach → 強硬／積極的方法",
+        "examples": [
+            "The dog became aggressive when strangers came near."
+        ]
+    },
+    {
+        "word": "ago",
+        "phonetic": "/əˈgəʊ/",
+        "pos": "adv.",
+        "translation": "adv. 以前",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nyears ago → 幾年前\na long time ago → 很久以前\nnot long ago → 不久前",
+        "examples": [
+            "We moved to this city five years ago."
+        ]
+    },
+    {
+        "word": "agree",
+        "phonetic": "/əˈgriː/",
+        "pos": "vi.; vt.",
+        "translation": "vi. 同意;贊成\nvt. 同意",
+        "roots": "ag-(=ad,向)+gree(=gratus令人愉快的)→ 達成一致\nCommon collocations:\nagree with sb → 同意某人\nagree on sth → 就某事達成一致\nagree to do sth → 同意做某事\nagree that → 同意……",
+        "examples": [
+            "I agree with what you said."
+        ]
+    },
+    {
+        "word": "agreement",
+        "phonetic": "/əˈgriː.mənt/",
+        "pos": "n.",
+        "translation": "n. 同意;協議",
+        "roots": "agree + -ment(名詞後綴)\nCommon collocations:\nreach an agreement → 達成協議\nin agreement with → 與……一致\nmutual agreement → 共同協議",
+        "examples": [
+            "Both companies signed the agreement yesterday."
+        ]
+    },
+    {
+        "word": "ahead",
+        "phonetic": "/əˈhed/",
+        "pos": "adj.; adv.",
+        "translation": "a. 領先的\nadv. 在前面;提前",
+        "roots": "a-(在)+head(頭,前部)→ 在前面\nCommon collocations:\nahead of → 在……之前\nplan ahead → 提前計畫\nahead of schedule → 提前於計畫",
+        "examples": [
+            "There's a lot of traffic ahead."
+        ]
+    },
+    {
+        "word": "aid",
+        "phonetic": "/eɪd/",
+        "pos": "n.; vt.; vi.",
+        "translation": "n. 幫助;援助\nvt. 援助,幫助\nvi. 幫助",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nforeign aid → 外國援助\nfinancial aid → 財政援助\nwith the aid of → 在……的幫助下\naid development → 援助發展",
+        "examples": [
+            "The charity provides aid to families in need."
+        ]
+    },
+    {
+        "word": "aim",
+        "phonetic": "/eɪm/",
+        "pos": "n.; vi.; vt.",
+        "translation": "n. 目標；目的；瞄準\nvi. 致力於；打算\nvt. 瞄準",
+        "roots": "Word formation: 源自古法語 esmer「估計；瞄準」；不作現代字面硬拆\nCommon collocations:\naim to do sth → 旨在做某事\naim at sth → 以某事為目標\nthe main aim → 主要目標\nwith the aim of doing → 以做某事為目的",
+        "examples": [
+            "Our aim is to reduce plastic waste."
+        ]
+    },
+    {
+        "word": "air",
+        "phonetic": "/eər/",
+        "pos": "n.; vt.",
+        "translation": "n. 空氣;神情\nvt. 晾;使通風;發表(意見)",
+        "roots": "Word formation: 無適合的現代詞根拆解；保留可靠詞源即可\nCommon collocations:\nair pollution → 空氣污染\nair quality → 空氣品質\nair one’s views → 公開表達觀點",
+        "examples": [
+            "Open the window and let in some fresh air."
+        ]
+    },
+    {
+        "word": "aircraft",
+        "phonetic": "/ˈeə.krɑːft/",
+        "pos": "n.",
+        "translation": "n. 飛機;航空器",
+        "roots": "air(空中)+craft(工藝,器具)→ 航空器\nCommon collocations:\ncommercial aircraft → 商用飛機\naircraft industry → 航空器產業\naircraft noise → 飛機噪音",
+        "examples": [
+            "The aircraft landed safely despite the storm."
+        ]
+    },
+    {
+        "word": "airport",
+        "phonetic": "/ˈeə.pɔːt/",
+        "pos": "n.",
+        "translation": "n. 機場",
+        "roots": "air(空中)+port(港口)→ 空中港口 → 機場\nCommon collocations:\nairport terminal → 機場航廈\nairport security → 機場安檢\ninternational airport → 國際機場",
+        "examples": [
+            "We arrived at the airport two hours early."
+        ]
+    },
+    {
+        "word": "alarm",
+        "phonetic": "/əˈlɑːm/",
+        "pos": "n.; vt.",
+        "translation": "n. 警報；鬧鐘；驚恐；憂慮\nvt. 使驚恐；警告",
+        "roots": "Word formation: 源自義大利語 all'arme「拿起武器！」→ 警報；不作 alarm = al- + arm 的現代構詞分析\nCommon collocations:\nfire alarm → 火警警報器\nset the alarm → 設定鬧鐘\nraise the alarm → 發出警報／引起警覺\ncause alarm → 引起恐慌",
+        "examples": [
+            "The fire alarm went off during the lesson."
+        ]
+    },
+    {
+        "word": "alarmed",
+        "phonetic": "/əˈlɑːmd/",
+        "pos": "adj.",
+        "translation": "adj. 驚恐的；擔心的；警覺的",
+        "roots": "alarm + -ed(形容詞後綴)\nCommon collocations:\nbe alarmed by → 因……而驚恐\nbe alarmed at → 對……感到擔憂\ndeeply alarmed → 深感憂慮",
+        "examples": [
+            "She was alarmed by the loud noise."
+        ]
+    },
+    {
+        "word": "alarming",
+        "phonetic": "/əˈlɑː.mɪŋ/",
+        "pos": "adj.",
+        "translation": "adj. 令人驚恐的；令人擔憂的",
+        "roots": "alarm + -ing(形容詞後綴)\nCommon collocations:\nalarming rate → 令人擔憂的速度\nalarming increase → 令人擔憂的增加\nalarming level → 令人擔憂的程度",
+        "examples": [
+            "The rise in prices is alarming."
+        ]
+    },
+    {
+        "word": "alcohol",
+        "phonetic": "/ˈæl.kə.hɒl/",
+        "pos": "n.",
+        "translation": "n. 酒精;酒",
+        "roots": "Word formation: 源自阿拉伯語 al-kuḥl，原指精細粉末／蒸餾物；後指酒精\nCommon collocations:\nalcohol consumption → 酒精攝取量\nalcohol abuse → 酒精濫用\nalcohol content → 酒精含量",
+        "examples": [
+            "He doesn't drink alcohol at all."
+        ]
+    },
+    {
+        "word": "alcoholic",
+        "phonetic": "/ˌæl.kəˈhɒl.ɪk/",
+        "pos": "n.; adj.",
+        "translation": "n. 酒精依賴者；酒鬼\nadj. 含酒精的；酒精的",
+        "roots": "alcohol + -ic(形容詞後綴)\nCommon collocations:\nalcoholic beverage → 含酒精飲料\nalcoholic drink → 酒精飲料\nalcohol dependence → 酒精依賴",
+        "examples": [
+            "The bar serves both alcoholic and non-alcoholic drinks."
+        ]
+    },
+    {
+        "word": "alive",
+        "phonetic": "/əˈlaɪv/",
+        "pos": "",
+        "translation": "a. 活著的；有活力的",
+        "roots": "Word formation:\na-（處於）+ live（生存）→ 活著的\n\nCommon collocations:\nremain alive → 仍然活著\nstay alive → 活下來\ncome alive → 變得活躍；恢復生氣",
+        "examples": [
+            "The rescue team found the climber alive."
+        ]
+    },
+    {
+        "word": "all",
+        "phonetic": "/ɔːl/",
+        "pos": "",
+        "translation": "a. 所有的；全部的\nadv. 完全；全然\npron. 全部",
+        "roots": "Word formation:\n源自古英語 all → 全部\n\nCommon collocations:\nall over the world → 全世界\nall of a sudden → 突然\nabove all → 最重要的是",
+        "examples": [
+            "All the students passed the exam."
+        ]
+    },
+    {
+        "word": "all right",
+        "phonetic": "",
+        "pos": "",
+        "translation": "phr. 好的；可以；沒問題",
+        "roots": "Word formation:\nall（全部）+ right（正確的）→ 一切沒問題\n\nCommon collocations:\nall right with sb → 對某人來說沒問題\nIt's all right. → 沒關係；沒事",
+        "examples": [
+            "Don't worry, everything will be all right."
+        ]
+    },
+    {
+        "word": "allied",
+        "phonetic": "/ˈæl.aɪd/",
+        "pos": "",
+        "translation": "a. 聯盟的；相關聯的",
+        "roots": "Word formation:\nally（同盟者）+ -ed（形容詞後綴）→ 聯盟的\n\nCommon collocations:\nallied countries → 同盟國\nallied forces → 聯軍\nclosely allied → 密切相關的",
+        "examples": [
+            "Britain and France were allied during the war."
+        ]
+    },
+    {
+        "word": "allow",
+        "phonetic": "/əˈlaʊ/",
+        "pos": "",
+        "translation": "vt. 允許；准許；承認；使可能\nvi. 考慮到；容許",
+        "roots": "Word formation:\n源自古法語 alouer／拉丁語 allocare「分配；撥給」→ 允許\n\nCommon collocations:\nallow sb to do sth → 允許某人做某事\nallow for sth → 考慮到；把……計算在內\nallow access to → 允許使用／進入",
+        "examples": [
+            "Smoking is not allowed inside the building."
+        ]
+    },
+    {
+        "word": "ally",
+        "phonetic": "n. /ˈæl.aɪ/, v. /əˈlaɪ/",
+        "pos": "",
+        "translation": "n. 同盟者；盟友；同盟國\nv. 結盟；使結盟",
+        "roots": "Word formation:\nal-（= ad，向）+ ligare（綁）→ 綁在一起 → 結盟\n\nCommon collocations:\nclose ally → 親密盟友\nally with sb → 與某人結盟\nallied with → 與……結盟／有關聯",
+        "examples": [
+            "The two countries became close allies."
+        ]
+    },
+    {
+        "word": "almost",
+        "phonetic": "/ˈɔːl.məʊst/",
+        "pos": "",
+        "translation": "adv. 幾乎；差不多",
+        "roots": "Word formation:\nall（全部）+ most（最多）→ 幾乎全部\n\nCommon collocations:\nalmost all → 幾乎全部\nalmost certainly → 幾乎肯定\nalmost impossible → 幾乎不可能",
+        "examples": [
+            "I almost missed the train this morning."
+        ]
+    },
+    {
+        "word": "alone",
+        "phonetic": "/əˈləʊn/",
+        "pos": "",
+        "translation": "a. 單獨的；孤獨的\nadv. 獨自地；單獨地",
+        "roots": "Word formation:\nall（完全）+ one（一個）→ 單獨一人\n\nCommon collocations:\nlive alone → 獨自生活\nleave sb alone → 不打擾某人\nalone with → 與……單獨在一起",
+        "examples": [
+            "She prefers to travel alone."
+        ]
+    },
+    {
+        "word": "along",
+        "phonetic": "/əˈlɒŋ/",
+        "pos": "",
+        "translation": "prep. 沿著\nadv. 向前；沿著",
+        "roots": "Word formation:\n源自古英語 andlang「沿著；全程」→ 沿著\n\nCommon collocations:\nalong the road → 沿著道路\nalong with → 與……一起；以及\nall along → 一直；始終",
+        "examples": [
+            "We walked along the beach at sunset."
+        ]
+    },
+    {
+        "word": "alongside",
+        "phonetic": "/əˌlɒŋˈsaɪd/",
+        "pos": "",
+        "translation": "prep. 在……旁邊；與……一起\nadv. 在旁邊",
+        "roots": "Word formation:\nalong（沿著）+ side（側邊）→ 在旁邊\n\nCommon collocations:\nalongside sth → 與某物並列／一起\nwork alongside sb → 與某人一起工作\nalongside each other → 彼此並列",
+        "examples": [
+            "He worked alongside the doctors in the hospital."
+        ]
+    },
+    {
+        "word": "aloud",
+        "phonetic": "/əˈlaʊd/",
+        "pos": "",
+        "translation": "adv. 出聲地；大聲地",
+        "roots": "Word formation:\na-（以……方式）+ loud（大聲的）→ 出聲地\n\nCommon collocations:\nread aloud → 大聲朗讀\nsay aloud → 大聲說出\nthink aloud → 自言自語；把想法說出來",
+        "examples": [
+            "The teacher asked him to read the poem aloud."
+        ]
+    },
+    {
+        "word": "alphabet",
+        "phonetic": "/ˈæl.fə.bet/",
+        "pos": "",
+        "translation": "n. 字母表；字母系統",
+        "roots": "Word formation:\n希臘語 alpha + beta（前兩個字母）→ 字母表\n\nCommon collocations:\nthe alphabet → 字母表\nalphabet system → 字母系統\nin alphabetical order → 按字母順序",
+        "examples": [
+            "Children learn the alphabet in their first year of school."
+        ]
+    },
+    {
+        "word": "alphabetical",
+        "phonetic": "/ˌæl.fəˈbet.ɪ.kəl/",
+        "pos": "",
+        "translation": "a. 按字母順序的",
+        "roots": "Word formation:\nalphabet + -ical（形容詞後綴）→ 按字母的\n\nCommon collocations:\nalphabetical order → 字母順序\nalphabetical list → 按字母排列的清單",
+        "examples": [
+            "The names are listed in alphabetical order."
+        ]
+    },
+    {
+        "word": "alphabetically",
+        "phonetic": "/ˌæl.fəˈbet.ɪ.kli/",
+        "pos": "",
+        "translation": "adv. 按字母順序地",
+        "roots": "Word formation:\nalphabetical + -ly（副詞後綴）\n\nCommon collocations:\narrange alphabetically → 按字母順序排列\nlisted alphabetically → 按字母順序列出",
+        "examples": [
+            "Please arrange the files alphabetically."
+        ]
+    },
+    {
+        "word": "already",
+        "phonetic": "/ɔːlˈred.i/",
+        "pos": "",
+        "translation": "adv. 已經；早已",
+        "roots": "Word formation:\nall（完全）+ ready（準備好）→ 已經準備好 → 已經\n\nCommon collocations:\nalready have → 已經有\nalready been → 已經……\nas already mentioned → 如前所述",
+        "examples": [
+            "I have already finished my homework."
+        ]
+    },
+    {
+        "word": "also",
+        "phonetic": "/ˈɔːl.səʊ/",
+        "pos": "",
+        "translation": "adv. 也；而且",
+        "roots": "Word formation:\n源自古英語 eallswa「同樣地；也」→ 也\n\nCommon collocations:\nalso known as → 又稱為\nnot only ... but also ... → 不僅……而且……\nalso include → 也包括",
+        "examples": [
+            "She speaks French and also Spanish."
+        ]
+    },
+    {
+        "word": "alter",
+        "phonetic": "/ˈɒl.tər/",
+        "pos": "",
+        "translation": "v. 改變；修改",
+        "roots": "Word formation:\n源自拉丁語 alter「另一個」→ 使變得不同\n\nCommon collocations:\nalter the way → 改變方式\nalter significantly → 顯著改變\nalter one's behaviour → 改變某人的行為",
+        "examples": [
+            "They had to alter their plans because of the weather."
+        ]
+    },
+    {
+        "word": "alternative",
+        "phonetic": "/ɒlˈtɜː.nə.tɪv/",
+        "pos": "",
+        "translation": "n. 替代方案；選擇\na. 可替代的；供選擇的",
+        "roots": "Word formation:\nalter（另一個）+ -native → 可替代的\n\nCommon collocations:\nan alternative to sth → ……的替代方案\nalternative energy → 替代能源\nalternative approach → 替代方法",
+        "examples": [
+            "Cycling is a good alternative to driving."
+        ]
+    },
+    {
+        "word": "alternatively",
+        "phonetic": "/ɒlˈtɜː.nə.tɪv.li/",
+        "pos": "",
+        "translation": "adv. 或者；作為替代",
+        "roots": "Word formation:\nalternative + -ly（副詞後綴）\n\nCommon collocations:\nalternatively, ... → 或者……\nalternatively use → 改用……；作為替代使用",
+        "examples": [
+            "You can pay by card, or alternatively, in cash."
+        ]
+    },
+    {
+        "word": "although",
+        "phonetic": "/ɔːlˈðəʊ/",
+        "pos": "",
+        "translation": "conj. 雖然；儘管",
+        "roots": "Word formation:\nall + though「儘管如此」→ 雖然\n\nCommon collocations:\nalthough ... → 雖然……\nalthough it is true that ... → 儘管……確實如此",
+        "examples": [
+            "Although it was raining, we went for a walk."
+        ]
+    },
+    {
+        "word": "altogether",
+        "phonetic": "/ˌɔːl.təˈgeð.ər/",
+        "pos": "",
+        "translation": "adv. 完全地；總共；總的來說",
+        "roots": "Word formation:\nall（全部）+ together（一起）→ 全部合在一起\n\nCommon collocations:\naltogether different → 完全不同\naltogether impossible → 完全不可能\nin all / altogether → 總共",
+        "examples": [
+            "The trip cost two hundred dollars altogether."
+        ]
+    },
+    {
+        "word": "always",
+        "phonetic": "/ˈɔːl.weɪz/",
+        "pos": "",
+        "translation": "adv. 總是；始終",
+        "roots": "Word formation:\nall（全部）+ ways（方式；時間）→ 始終\n\nCommon collocations:\nas always → 一如往常\nalways be → 始終是\nalmost always → 幾乎總是",
+        "examples": [
+            "She always arrives on time."
+        ]
+    },
+    {
+        "word": "amaze",
+        "phonetic": "/əˈmeɪz/",
+        "pos": "",
+        "translation": "vt. 使驚訝；使驚嘆",
+        "roots": "Word formation:\n源自 amaze「使迷惑、使驚訝」→ 使驚訝\n\nCommon collocations:\namaze sb → 使某人驚訝\nbe amazed at/by → 對……感到驚訝\namazing discovery → 驚人的發現",
+        "examples": [
+            "The magic show amazed the whole audience."
+        ]
+    },
+    {
+        "word": "amazed",
+        "phonetic": "/əˈmeɪzd/",
+        "pos": "",
+        "translation": "a. 驚訝的；吃驚的",
+        "roots": "Word formation:\namaze + -ed（形容詞後綴）→ 感到驚訝的\n\nCommon collocations:\nbe amazed at/by → 對……感到驚訝\nbe amazed to see → 驚訝地看到",
+        "examples": [
+            "I was amazed by the beauty of the mountains."
+        ]
+    },
+    {
+        "word": "amazing",
+        "phonetic": "/əˈmeɪ.zɪŋ/",
+        "pos": "",
+        "translation": "a. 令人驚訝的；驚人的",
+        "roots": "Word formation:\namaze + -ing（形容詞後綴）→ 令人驚訝的\n\nCommon collocations:\namazing result → 驚人的結果\namazing discovery → 驚人的發現",
+        "examples": [
+            "The view from the top was amazing."
+        ]
+    },
+    {
+        "word": "ambition",
+        "phonetic": "/æmˈbɪʃ.ən/",
+        "pos": "",
+        "translation": "n. 抱負；雄心；野心",
+        "roots": "Word formation:\n源自拉丁語 ambitio「周旋；追求職位」→ 抱負；野心\n\nCommon collocations:\nachieve one's ambition → 實現抱負\nambition to do sth → 做某事的抱負\npolitical ambition → 政治抱負",
+        "examples": [
+            "His ambition is to become a doctor."
+        ]
+    },
+    {
+        "word": "ambulance",
+        "phonetic": "/ˈæm.bjə.ləns/",
+        "pos": "",
+        "translation": "n. 救護車",
+        "roots": "Word formation:\nambul-（= ambulare，走動）→ 移動的醫療車輛 → 救護車\n\nCommon collocations:\ncall an ambulance → 叫救護車\nambulance service → 救護服務",
+        "examples": [
+            "An ambulance arrived within minutes."
+        ]
+    },
+    {
+        "word": "among",
+        "phonetic": "/əˈmʌŋ/",
+        "pos": "",
+        "translation": "prep. 在……之中；在……之間",
+        "roots": "Word formation:\n源自古英語 among「在……中間」→ 在……之中\n\nCommon collocations:\namong the most → ……中最……\namong others → 除其他人／事物之外\namong young people → 在年輕人中",
+        "examples": [
+            "The gift was shared among the children."
+        ]
+    },
+    {
+        "word": "amount",
+        "phonetic": "/əˈmaʊnt/",
+        "pos": "",
+        "translation": "n. 數量；總額\nvi. 總計；等同於",
+        "roots": "Word formation:\n源自古法語 amunter「上升到；總計」→ 總額\n\nCommon collocations:\namount of sth → ……的數量\na large/small amount of → 大量／少量的\namount to → 總計；等同於",
+        "examples": [
+            "A large amount of money was raised for charity."
+        ]
+    },
+    {
+        "word": "amuse",
+        "phonetic": "/əˈmjuːz/",
+        "pos": "",
+        "translation": "vt. 逗樂；使發笑；使消遣",
+        "roots": "Word formation:\n源自法語 amuser「使消遣」→ 逗樂\n\nCommon collocations:\namuse sb → 逗樂某人\namuse oneself → 自娛\namusement park → 遊樂園",
+        "examples": [
+            "The clown amused the children with his tricks."
+        ]
+    },
+    {
+        "word": "amused",
+        "phonetic": "/əˈmjuːzd/",
+        "pos": "",
+        "translation": "a. 覺得好笑的；感到有趣的",
+        "roots": "Word formation:\namuse + -ed（形容詞後綴）→ 感到有趣的\n\nCommon collocations:\nbe amused by/at → 覺得……好笑\nlook amused → 看起來覺得有趣",
+        "examples": [
+            "She looked amused by his joke."
+        ]
+    },
+    {
+        "word": "amusing",
+        "phonetic": "/əˈmjuː.zɪŋ/",
+        "pos": "",
+        "translation": "a. 有趣的；好笑的",
+        "roots": "Word formation:\namuse + -ing（形容詞後綴）→ 令人覺得有趣的\n\nCommon collocations:\namusing story → 有趣的故事\namusing example → 有趣的例子",
+        "examples": [
+            "It was an amusing story about his trip."
+        ]
+    },
+    {
+        "word": "analyse",
+        "phonetic": "/ˈæn.əl.aɪz/",
+        "pos": "",
+        "translation": "vt. 分析；解析；細察",
+        "roots": "Word formation:\nana-（徹底）+ lyse（分解）→ 徹底分解 → 分析\n\nCommon collocations:\nanalyse data → 分析數據\nanalyse the results → 分析結果\nanalyse the causes → 分析原因",
+        "examples": [
+            "Scientists analysed the data carefully."
+        ]
+    },
+    {
+        "word": "analysis",
+        "phonetic": "/əˈnæl.ə.sɪs/",
+        "pos": "",
+        "translation": "n. 分析；解析",
+        "roots": "Word formation:\nanalyse + -sis（名詞形式）→ 分析\n\nCommon collocations:\ndata analysis → 數據分析\ndetailed analysis → 詳細分析\nanalysis of sth → 對某事的分析",
+        "examples": [
+            "The report gives a detailed analysis of the results."
+        ]
+    },
+    {
+        "word": "ancient",
+        "phonetic": "/ˈeɪn.ʃənt/",
+        "pos": "",
+        "translation": "a. 古代的；古老的",
+        "roots": "Word formation:\n源自拉丁語 ante「以前」→ 古老的\n\nCommon collocations:\nancient civilisation → 古代文明\nancient history → 古代史\nancient remains → 古代遺跡",
+        "examples": [
+            "We visited some ancient ruins in Greece."
+        ]
+    },
+    {
+        "word": "and",
+        "phonetic": "/ænd/, 弱讀 /ənd/",
+        "pos": "",
+        "translation": "conj. 和；與；而且",
+        "roots": "Word formation:\n源自古英語 and → 和；與\n\nCommon collocations:\nand so on → 等等\nboth A and B → A 和 B 都\nbetween A and B → 在 A 與 B 之間",
+        "examples": [
+            "I bought bread and milk."
+        ]
+    },
+    {
+        "word": "anger",
+        "phonetic": "/ˈæŋ.gər/",
+        "pos": "",
+        "translation": "n. 憤怒\nv. 激怒；發怒",
+        "roots": "Word formation:\n源自古諾斯語 angr「痛苦；悲傷」→ 憤怒\n\nCommon collocations:\nanger at/about sth → 對某事的憤怒\nin anger → 憤怒地\nanger management → 憤怒管理",
+        "examples": [
+            "He tried to control his anger."
+        ]
+    },
+    {
+        "word": "angle",
+        "phonetic": "/ˈæŋ.gl/",
+        "pos": "",
+        "translation": "n. 角；角度；觀點；角落\nv. （使）轉動角度",
+        "roots": "Word formation:\n源自希臘語 ankylos「彎曲的」→ 角\n\nCommon collocations:\nfrom a different angle → 從不同角度\na new angle on sth → 看待某事的新角度\nangle of → ……的角度",
+        "examples": [
+            "Look at the photo from a different angle."
+        ]
+    },
+    {
+        "word": "angrily",
+        "phonetic": "/ˈæŋ.grɪ.li/",
+        "pos": "",
+        "translation": "adv. 憤怒地",
+        "roots": "Word formation:\nangry + -ly（副詞後綴）\n\nCommon collocations:\nspeak angrily → 憤怒地說\nreact angrily → 憤怒地反應",
+        "examples": [
+            "She slammed the door angrily."
+        ]
+    },
+    {
+        "word": "angry",
+        "phonetic": "/ˈæŋ.gri/",
+        "pos": "",
+        "translation": "a. 生氣的；憤怒的",
+        "roots": "Word formation:\nanger + -y（形容詞後綴）→ 充滿憤怒的\n\nCommon collocations:\nangry about/at sth → 對某事生氣\nget angry → 生氣\nangry with sb → 對某人生氣",
+        "examples": [
+            "My father was angry about the broken window."
+        ]
+    },
+    {
+        "word": "animal",
+        "phonetic": "/ˈæn.ɪ.məl/",
+        "pos": "",
+        "translation": "n. 動物；獸類",
+        "roots": "Word formation:\n源自拉丁語 animal「有生命的生物」→ 動物\n\nCommon collocations:\nwild animal → 野生動物\nanimal species → 動物物種\nanimal behaviour → 動物行為",
+        "examples": [
+            "The zoo has many different animals."
+        ]
+    },
+    {
+        "word": "ankle",
+        "phonetic": "/ˈæŋ.kl/",
+        "pos": "",
+        "translation": "n. 腳踝；踝關節",
+        "roots": "Word formation:\n源自古英語 ancleow「踝關節」→ 腳踝\n\nCommon collocations:\nankle injury → 腳踝受傷\nsprained ankle → 扭傷的腳踝",
+        "examples": [
+            "She twisted her ankle while running."
+        ]
+    },
+    {
+        "word": "anniversary",
+        "phonetic": "/ˌæn.ɪˈvɜː.sər.i/",
+        "pos": "",
+        "translation": "n. 週年紀念日；週年紀念",
+        "roots": "Word formation:\nanni-（年）+ vers（轉）+ -ary → 每年重現的日子\n\nCommon collocations:\nthe anniversary of sth → 某事的週年紀念\non the anniversary → 在週年紀念日\nwedding anniversary → 結婚週年紀念日",
+        "examples": [
+            "Today is their tenth wedding anniversary."
+        ]
+    },
+    {
+        "word": "announce",
+        "phonetic": "/əˈnaʊns/",
+        "pos": "",
+        "translation": "vt. 宣布；宣告",
+        "roots": "Word formation:\nan-（= ad，向）+ nounce（= nuntiare，宣告）→ 宣布\n\nCommon collocations:\nannounce that → 宣布……\nannounce plans → 宣布計畫\nannounce a decision → 宣布決定",
+        "examples": [
+            "The teacher announced the exam results."
+        ]
+    },
+    {
+        "word": "annoy",
+        "phonetic": "/əˈnɔɪ/",
+        "pos": "",
+        "translation": "vt. 惹惱；使煩惱\nvi. 使人惱怒",
+        "roots": "Word formation:\n源自古法語 anoier「使煩惱」→ 惹惱\n\nCommon collocations:\nannoy sb → 惹惱某人\nbe annoyed by/with → 因……而惱怒\nannoying habit → 令人惱火的習慣",
+        "examples": [
+            "Loud music at night really annoys me."
+        ]
+    },
+    {
+        "word": "annoyed",
+        "phonetic": "/əˈnɔɪd/",
+        "pos": "",
+        "translation": "a. 惱怒的；煩惱的",
+        "roots": "Word formation:\nannoy + -ed（形容詞後綴）→ 感到惱怒的\n\nCommon collocations:\nbe annoyed with sb → 對某人惱怒\nbe annoyed by sth → 因某事而惱怒",
+        "examples": [
+            "He was annoyed by the constant noise."
+        ]
+    },
+    {
+        "word": "annoying",
+        "phonetic": "/əˈnɔɪ.ɪŋ/",
+        "pos": "",
+        "translation": "a. 令人惱火的；令人煩惱的",
+        "roots": "Word formation:\nannoy + -ing（形容詞後綴）→ 令人惱怒的\n\nCommon collocations:\nannoying problem → 令人煩惱的問題\nannoying habit → 令人惱火的習慣",
+        "examples": [
+            "It's annoying when people are late."
+        ]
+    },
+    {
+        "word": "annual",
+        "phonetic": "/ˈæn.ju.əl/",
+        "pos": "",
+        "translation": "n. 年刊；年報\na. 每年的；年度的",
+        "roots": "Word formation:\nannu-（= annus，年）+ -al → 每年的\n\nCommon collocations:\nannual report → 年度報告\nannual growth → 年度增長\nannual average → 年平均值",
+        "examples": [
+            "The company holds an annual meeting in June."
+        ]
+    },
+    {
+        "word": "annually",
+        "phonetic": "/ˈæn.ju.ə.li/",
+        "pos": "",
+        "translation": "adv. 每年；一年一次",
+        "roots": "Word formation:\nannual + -ly（副詞後綴）\n\nCommon collocations:\nreported annually → 每年報告\nmeet annually → 每年會面\nincrease annually → 每年增加",
+        "examples": [
+            "The festival takes place annually in the summer."
+        ]
+    },
+    {
+        "word": "another",
+        "phonetic": "/əˈnʌð.ər/",
+        "pos": "",
+        "translation": "a. 另一個的；再一個的\npron. 另一個；又一個",
+        "roots": "Word formation:\nan（= one，一）+ other（其他）→ 另一個\n\nCommon collocations:\nanother example → 另一個例子\nanother way → 另一種方式\none after another → 一個接一個",
+        "examples": [
+            "Could I have another cup of coffee?"
+        ]
+    },
+    {
+        "word": "answer",
+        "phonetic": "/ˈɑːn.sər/",
+        "pos": "",
+        "translation": "n. 答案；回答\nv. 回答；回應；對……負責",
+        "roots": "Word formation:\n源自古英語 andswaru「回應；答覆」→ 回答\n\nCommon collocations:\nanswer a question → 回答問題\nanswer for sth → 為某事負責\nthe answer to sth → 某事的答案／解決方案",
+        "examples": [
+            "She gave the correct answer to the question."
+        ]
+    },
+    {
+        "word": "anticipate",
+        "phonetic": "/ænˈtɪs.ɪ.peɪt/",
+        "pos": "",
+        "translation": "vt. 預期；預料；期待",
+        "roots": "Word formation:\nanti-（= ante，先）+ cip（= capere，拿）+ -ate → 提前取得 → 預期\n\nCommon collocations:\nanticipate that → 預期……\nanticipate a problem → 預料到問題\nanticipate demand → 預測需求",
+        "examples": [
+            "We anticipate a busy weekend at the shop."
+        ]
+    },
+    {
+        "word": "anxiety",
+        "phonetic": "/æŋˈzaɪ.ə.ti/",
+        "pos": "",
+        "translation": "n. 焦慮；擔憂",
+        "roots": "Word formation:\nanx-（= angere，使窒息）+ -iety → 焦慮\n\nCommon collocations:\nanxiety about/over sth → 對某事的焦慮\ncause anxiety → 引起焦慮\nreduce anxiety → 減少焦慮",
+        "examples": [
+            "He suffers from anxiety before big exams."
+        ]
+    },
+    {
+        "word": "anxious",
+        "phonetic": "/ˈæŋk.ʃəs/",
+        "pos": "",
+        "translation": "a. 焦慮的；擔憂的；渴望的",
+        "roots": "Word formation:\nanx-（焦慮）+ -ious（形容詞後綴）\n\nCommon collocations:\nanxious about sth → 對某事焦慮\nanxious to do sth → 渴望做某事\nanxious for sth → 渴望某事",
+        "examples": [
+            "She felt anxious about the job interview."
+        ]
+    },
+    {
+        "word": "anxiously",
+        "phonetic": "/ˈæŋk.ʃəs.li/",
+        "pos": "",
+        "translation": "adv. 焦慮地；不安地",
+        "roots": "Word formation:\nanxious + -ly（副詞後綴）\n\nCommon collocations:\nwait anxiously → 焦急地等待\nlook anxiously → 焦慮地看",
+        "examples": [
+            "They waited anxiously for the test results."
+        ]
+    },
+    {
+        "word": "any",
+        "phonetic": "/ˈen.i/",
+        "pos": "",
+        "translation": "a. 任何的；任一的\npron. 任何",
+        "roots": "Word formation:\n源自古英語 ænig「任何一個」→ 任何\n\nCommon collocations:\nany of → ……中的任何一個\nif there is any → 如果有任何……\nat any time → 在任何時候",
+        "examples": [
+            "Do you have any questions?"
+        ]
+    },
+    {
+        "word": "anyone",
+        "phonetic": "/ˈen.i.wʌn/",
+        "pos": "",
+        "translation": "pron. 任何人",
+        "roots": "Word formation:\nany（任何）+ one（一個人）\n\nCommon collocations:\nanyone who → 任何……的人\nanyone else → 其他任何人",
+        "examples": [
+            "Is anyone home?"
+        ]
+    },
+    {
+        "word": "anything",
+        "phonetic": "/ˈen.i.θɪŋ/",
+        "pos": "",
+        "translation": "pron. 任何事物；任何事情",
+        "roots": "Word formation:\nany（任何）+ thing（事物）\n\nCommon collocations:\nanything but → 絕不是；除了……之外的任何事物\nanything else → 其他任何事物",
+        "examples": [
+            "Would you like anything to drink?"
+        ]
+    },
+    {
+        "word": "anyway",
+        "phonetic": "/ˈen.i.weɪ/",
+        "pos": "",
+        "translation": "adv. 無論如何；不管怎樣",
+        "roots": "Word formation:\nany（任何）+ way（方式）→ 無論如何\n\nCommon collocations:\nanyway, ... → 無論如何……\nnot ... anyway → 無論如何都不……",
+        "examples": [
+            "It was expensive, but I bought it anyway."
+        ]
+    },
+    {
+        "word": "anywhere",
+        "phonetic": "/ˈen.i.weər/",
+        "pos": "",
+        "translation": "adv. 任何地方；無論何處",
+        "roots": "Word formation:\nany（任何）+ where（地方）\n\nCommon collocations:\nanywhere from A to B → 從 A 到 B 的任何地方／範圍\nanywhere else → 其他任何地方",
+        "examples": [
+            "You can sit anywhere you like."
+        ]
+    },
+    {
+        "word": "apart",
+        "phonetic": "/əˈpɑːt/",
+        "pos": "",
+        "translation": "adv. 分開；分離地\na. 分離的",
+        "roots": "Word formation:\na-（處於）+ part（部分）→ 分開\n\nCommon collocations:\nfall apart → 崩潰；散架\nkeep apart → 使分開\napart from → 除……之外",
+        "examples": [
+            "The two towns are ten kilometres apart."
+        ]
+    },
+    {
+        "word": "apart from",
+        "phonetic": "",
+        "pos": "",
+        "translation": "prep. 除……之外；除了……還",
+        "roots": "Word formation:\napart（分開）+ from（從）→ 從……分開\n\nCommon collocations:\napart from sth → 除某事之外\napart from the fact that → 除了……這一事實之外",
+        "examples": [
+            "Apart from the rain, it was a good day."
+        ]
+    },
+    {
+        "word": "apartment",
+        "phonetic": "/əˈpɑːt.mənt/",
+        "pos": "",
+        "translation": "n. 公寓；房間",
+        "roots": "Word formation:\napart（分開）+ -ment（名詞後綴）→ 分隔的房間\n\nCommon collocations:\napartment building → 公寓大樓\nrent an apartment → 租公寓\napartment block → 公寓樓",
+        "examples": [
+            "They live in a small apartment in the city."
+        ]
+    },
+    {
+        "word": "apologize",
+        "phonetic": "/əˈpɒl.ə.dʒaɪz/",
+        "pos": "",
+        "translation": "vi. 道歉",
+        "roots": "Word formation:\napo-（離開）+ log（言語）+ -ize → 表示歉意\n\nCommon collocations:\napologize to sb → 向某人道歉\napologize for sth → 為某事道歉\napologize for doing sth → 為做某事道歉",
+        "examples": [
+            "He apologized for being late."
+        ]
+    },
+    {
+        "word": "apparent",
+        "phonetic": "/əˈpær.ənt/",
+        "pos": "",
+        "translation": "a. 明顯的；顯然的；表面上的",
+        "roots": "Word formation:\nap-（= ad，向）+ par（= parere，出現）+ -ent → 顯現出的\n\nCommon collocations:\nit is apparent that → 顯然……\napparent reason → 表面上的原因\napparent contradiction → 表面上的矛盾",
+        "examples": [
+            "It became apparent that we were lost."
+        ]
+    },
+    {
+        "word": "apparently",
+        "phonetic": "/əˈpær.ənt.li/",
+        "pos": "",
+        "translation": "adv. 顯然；看來；表面上",
+        "roots": "Word formation:\napparent + -ly（副詞後綴）\n\nCommon collocations:\napparently unaware → 顯然沒有意識到\napparently simple → 表面上簡單的",
+        "examples": [
+            "Apparently, the shop is closed today."
+        ]
+    },
+    {
+        "word": "appeal",
+        "phonetic": "/əˈpiːl/",
+        "pos": "",
+        "translation": "n. 呼籲；吸引力；上訴\nvi. 呼籲；有吸引力；上訴",
+        "roots": "Word formation:\nap-（= ad，向）+ pell（= pellere，驅使）→ 向某人呼籲\n\nCommon collocations:\nappeal to sb → 向某人呼籲；對某人有吸引力\nmake an appeal → 發出呼籲\nappeal against a decision → 對決定提出上訴",
+        "examples": [
+            "The charity made an appeal for donations."
+        ]
+    },
+    {
+        "word": "appear",
+        "phonetic": "/əˈpɪər/",
+        "pos": "",
+        "translation": "vi. 出現；顯得；似乎",
+        "roots": "Word formation:\nap-（= ad，向）+ par（= parere，出現）→ 出現\n\nCommon collocations:\nappear to do sth → 似乎做某事\nappear to be → 似乎是……\nappear in → 出現在……中",
+        "examples": [
+            "The sun began to appear from behind the clouds."
+        ]
+    },
+    {
+        "word": "appearance",
+        "phonetic": "/əˈpɪə.rəns/",
+        "pos": "",
+        "translation": "n. 出現；外觀；外表",
+        "roots": "Word formation:\nappear + -ance（名詞後綴）→ 出現；外觀\n\nCommon collocations:\nphysical appearance → 外表\nfirst appearance → 首次出現\nmake an appearance → 出席；露面",
+        "examples": [
+            "Her appearance had changed a lot since school."
+        ]
+    },
+    {
+        "word": "apple",
+        "phonetic": "/ˈæp.l/",
+        "pos": "",
+        "translation": "n. 蘋果",
+        "roots": "Word formation:\n源自古英語 æppel → 蘋果\n\nCommon collocations:\napple tree → 蘋果樹\napple juice → 蘋果汁",
+        "examples": [
+            "She ate a red apple for lunch."
+        ]
+    },
+    {
+        "word": "application",
+        "phonetic": "/ˌæp.lɪˈkeɪ.ʃən/",
+        "pos": "",
+        "translation": "n. 應用；申請；應用程式",
+        "roots": "Word formation:\nap-（= ad，向）+ ply（= plicare，折；用）+ -ation → 應用；申請\n\nCommon collocations:\napplication of sth → 某事物的應用\njob application → 求職申請\nmake an application → 提出申請",
+        "examples": [
+            "I sent my job application last week."
+        ]
+    },
+    {
+        "word": "apply",
+        "phonetic": "/əˈplaɪ/",
+        "pos": "",
+        "translation": "v. 塗；應用；申請；適用",
+        "roots": "Word formation:\nap-（= ad，向）+ ply（= plicare，折；用）→ 用於某處 → 應用\n\nCommon collocations:\napply for sth → 申請某事物\napply to sb/sth → 適用於某人／某事物\napply sth to sth → 把某物應用於某物",
+        "examples": [
+            "You should apply for the scholarship."
+        ]
+    },
+    {
+        "word": "appoint",
+        "phonetic": "/əˈpɔɪnt/",
+        "pos": "",
+        "translation": "vt. 任命；指定",
+        "roots": "Word formation:\nap-（= ad，向）+ point（指向；指定）→ 指定 → 任命\n\nCommon collocations:\nappoint sb as sth → 任命某人為……\nappoint sb to sth → 任命某人擔任……\nappoint a committee → 任命委員會",
+        "examples": [
+            "The board decided to appoint a new manager."
+        ]
+    },
+    {
+        "word": "appointment",
+        "phonetic": "/əˈpɔɪnt.mənt/",
+        "pos": "",
+        "translation": "n. 約會；預約；任命；職位",
+        "roots": "Word formation:\nappoint + -ment（名詞後綴）\n\nCommon collocations:\nmake an appointment → 預約\nappointment with sb → 與某人的約會／預約\nappointment as sth → 任命為……",
+        "examples": [
+            "I have a dentist's appointment tomorrow."
+        ]
+    },
+    {
+        "word": "appreciate",
+        "phonetic": "/əˈpriː.ʃi.eɪt/",
+        "pos": "",
+        "translation": "vt. 感激；欣賞；理解\nvi. 增值；漲價",
+        "roots": "Word formation:\nap-（= ad，向）+ preci（= pretium，價格）+ -ate → 給予高評價\n\nCommon collocations:\nappreciate sth → 欣賞／感激某事\nappreciate the importance of → 理解……的重要性\ngreatly appreciate → 非常感激",
+        "examples": [
+            "I really appreciate your help."
+        ]
+    },
+    {
+        "word": "approach",
+        "phonetic": "/əˈprəʊtʃ/",
+        "pos": "",
+        "translation": "n. 方法；途徑；接近\nv. 接近；處理；找……商量",
+        "roots": "Word formation:\nap-（= ad，向）+ proach（= prope，近）→ 靠近\n\nCommon collocations:\napproach to sth → ……的方法／途徑\ntake an approach → 採取一種方法\napproach a problem → 處理問題",
+        "examples": [
+            "The teacher used a new approach to teach grammar."
+        ]
+    },
+    {
+        "word": "appropriate",
+        "phonetic": "/əˈprəʊ.pri.ət/",
+        "pos": "",
+        "translation": "a. 適當的；合適的\nvt. 撥出；挪用",
+        "roots": "Word formation:\nap-（= ad，向）+ propri（= proprius，自己的）+ -ate → 適合的\n\nCommon collocations:\nappropriate for/to → 適合於……\nappropriate action → 適當的措施\nappropriate measures → 適當的措施",
+        "examples": [
+            "Please wear appropriate clothes for the interview."
+        ]
+    },
+    {
+        "word": "approval",
+        "phonetic": "/əˈpruː.vəl/",
+        "pos": "",
+        "translation": "n. 贊成；批准；認可",
+        "roots": "Word formation:\napprove + -al（名詞後綴）\n\nCommon collocations:\napproval from sb → 得到某人的批准\ngive approval to → 批准……\nseek approval → 尋求批准",
+        "examples": [
+            "The plan needs approval from the manager."
+        ]
+    },
+    {
+        "word": "approve",
+        "phonetic": "/əˈpruːv/",
+        "pos": "",
+        "translation": "vt. 贊同；批准；核准\nvi. 贊許",
+        "roots": "Word formation:\nap-（= ad，向）+ prove（= probare，證明）→ 證明為好 → 贊成\n\nCommon collocations:\napprove of sth → 贊同某事\napprove a plan → 批准計畫\nbe approved by → 經……批准",
+        "examples": [
+            "The committee approved the new budget."
+        ]
+    },
+    {
+        "word": "approving",
+        "phonetic": "/əˈpruː.vɪŋ/",
+        "pos": "",
+        "translation": "a. 贊成的；表示認可的",
+        "roots": "Word formation:\napprove + -ing（形容詞後綴）\n\nCommon collocations:\napproving response → 表示認可的回應\napproving attitude → 贊成的態度",
+        "examples": [
+            "She gave an approving nod."
+        ]
+    },
+    {
+        "word": "approximate",
+        "phonetic": "/əˈprɒk.sɪ.mət/",
+        "pos": "",
+        "translation": "a. 大約的；近似的\nv. 接近於；粗略估計",
+        "roots": "Word formation:\nap-（= ad，向）+ proxim（最近的）+ -ate → 接近的\n\nCommon collocations:\napproximate number → 大約數量\napproximate value → 近似值\nclosely approximate → 非常接近",
+        "examples": [
+            "Give me an approximate time for arrival."
+        ]
+    },
+    {
+        "word": "approximately",
+        "phonetic": "/əˈprɒk.sɪ.mət.li/",
+        "pos": "",
+        "translation": "adv. 大約；大致",
+        "roots": "Word formation:\napproximate + -ly（副詞後綴）\n\nCommon collocations:\napproximately equal → 大致相等\napproximately 20% → 約 20%\nweigh approximately → 重約……",
+        "examples": [
+            "The journey takes approximately two hours."
+        ]
+    },
+    {
+        "word": "April",
+        "phonetic": "/ˈeɪ.prəl/",
+        "pos": "",
+        "translation": "n. 四月",
+        "roots": "Word formation:\n源自拉丁語 Aprilis → 四月\n\nCommon collocations:\nin April → 在四月\nApril 15 → 4 月 15 日",
+        "examples": [
+            "Her birthday is in April."
+        ]
+    },
+    {
+        "word": "area",
+        "phonetic": "/ˈeə.ri.ə/",
+        "pos": "",
+        "translation": "n. 區域；地區；面積；範圍；領域",
+        "roots": "Word formation:\n源自拉丁語 area「空地；平面」→ 區域；面積\n\nCommon collocations:\narea of study → 研究領域\nrural area → 農村地區\nsurface area → 表面積",
+        "examples": [
+            "This area of the city is very quiet."
+        ]
+    },
+    {
+        "word": "argue",
+        "phonetic": "/ˈɑː.gjuː/",
+        "pos": "",
+        "translation": "vi. 爭論；辯論\nvt. 主張；論證；說服",
+        "roots": "Word formation:\n源自拉丁語 arguere「證明；使清楚」→ 論證\n\nCommon collocations:\nargue that → 主張……\nargue for/against → 為……辯護／反對……\nargue with sb → 與某人爭論",
+        "examples": [
+            "The two brothers often argue about small things."
+        ]
+    },
+    {
+        "word": "argument",
+        "phonetic": "/ˈɑː.gjə.mənt/",
+        "pos": "",
+        "translation": "n. 爭論；論點；論據",
+        "roots": "Word formation:\nargue + -ment（名詞後綴）\n\nCommon collocations:\nstrong argument → 有力論據\nargument for/against → 支持／反對……的論據\nput forward an argument → 提出論點",
+        "examples": [
+            "They had an argument about money."
+        ]
+    },
+    {
+        "word": "arise",
+        "phonetic": "/əˈraɪz/",
+        "pos": "",
+        "translation": "vi. 出現；產生；發生",
+        "roots": "Word formation:\na-（向上）+ rise（升起）→ 出現\n\nCommon collocations:\narise from sth → 源於某事\nproblems arise → 問題出現\nwhen the need arises → 當需要出現時",
+        "examples": [
+            "Problems can arise when you least expect them."
+        ]
+    },
+    {
+        "word": "arm",
+        "phonetic": "/ɑːm/",
+        "pos": "",
+        "translation": "n. 手臂；武器\nv. 武裝；使準備好",
+        "roots": "Word formation:\n源自古英語 arm「手臂；武器」→ 手臂；武器\n\nCommon collocations:\narm with → 用……武裝\narmed with → 配備……；掌握……\narms race → 軍備競賽",
+        "examples": [
+            "He broke his arm while skiing."
+        ]
+    },
+    {
+        "word": "armed",
+        "phonetic": "/ɑːmd/",
+        "pos": "",
+        "translation": "a. 武裝的；持械的",
+        "roots": "Word formation:\narm + -ed（形容詞後綴）→ 武裝的\n\nCommon collocations:\narmed forces → 武裝部隊\narmed conflict → 武裝衝突\narmed with sth → 掌握／配備某物",
+        "examples": [
+            "The building was guarded by armed police."
+        ]
+    },
+    {
+        "word": "arms",
+        "phonetic": "/ɑːmz/",
+        "pos": "",
+        "translation": "n. 武器；軍備",
+        "roots": "Word formation:\narm（武器）+ -s（複數）\n\nCommon collocations:\narms race → 軍備競賽\narms trade → 武器貿易\ntake up arms → 拿起武器",
+        "examples": [
+            "She held the baby in her arms."
+        ]
+    },
+    {
+        "word": "army",
+        "phonetic": "/ˈɑː.mi/",
+        "pos": "",
+        "translation": "n. 軍隊；陸軍",
+        "roots": "Word formation:\n源自古法語 armée「武裝部隊」→ 軍隊\n\nCommon collocations:\narmy forces → 陸軍部隊\njoin the army → 參軍\nstanding army → 常備軍",
+        "examples": [
+            "He joined the army at eighteen."
+        ]
+    },
+    {
+        "word": "around",
+        "phonetic": "/əˈraʊnd/",
+        "pos": "",
+        "translation": "prep. 在……周圍；大約\nadv. 到處；在附近；大約",
+        "roots": "Word formation:\n源自 a + round「在周圍」→ 在周圍\n\nCommon collocations:\naround the world → 全世界\naround 50% → 約 50%\nall around → 到處；四周",
+        "examples": [
+            "We walked around the old town for hours."
+        ]
+    },
+    {
+        "word": "arrange",
+        "phonetic": "/əˈreɪndʒ/",
+        "pos": "",
+        "translation": "v. 安排；排列；整理；達成協議",
+        "roots": "Word formation:\nar-（= ad，向）+ range（排列）→ 排列；安排\n\nCommon collocations:\narrange for sth → 安排某事\narrange to do sth → 安排做某事\narrange a meeting → 安排會議",
+        "examples": [
+            "Let's arrange a time to meet next week."
+        ]
+    },
+    {
+        "word": "arrangement",
+        "phonetic": "/əˈreɪndʒ.mənt/",
+        "pos": "",
+        "translation": "n. 安排；排列；協議",
+        "roots": "Word formation:\narrange + -ment（名詞後綴）\n\nCommon collocations:\nmake arrangements → 作安排\ntravel arrangements → 旅行安排\narrangement with sb → 與某人的協議／安排",
+        "examples": [
+            "We made an arrangement to share the car."
+        ]
+    },
+    {
+        "word": "arrest",
+        "phonetic": "/əˈrest/",
+        "pos": "",
+        "translation": "n. 逮捕；拘留\nvt. 逮捕；拘留；阻止",
+        "roots": "Word formation:\n源自法語 arrester「停止」→ 逮捕\n\nCommon collocations:\narrest sb for sth → 因某事逮捕某人\nbe under arrest → 被逮捕\narrest the decline → 阻止下降",
+        "examples": [
+            "The police made an arrest at the scene."
+        ]
+    },
+    {
+        "word": "arrival",
+        "phonetic": "/əˈraɪ.vəl/",
+        "pos": "",
+        "translation": "n. 到達；抵達；抵達者／事物",
+        "roots": "Word formation:\narrive + -al（名詞後綴）\n\nCommon collocations:\narrival at/in → 抵達……\non arrival → 到達時\narrival time → 抵達時間",
+        "examples": [
+            "We were happy about her safe arrival."
+        ]
+    },
+    {
+        "word": "arrive",
+        "phonetic": "/əˈraɪv/",
+        "pos": "",
+        "translation": "vi. 到達；抵達",
+        "roots": "Word formation:\nar-（= ad，向）+ rive（= ripa，岸）→ 到達岸邊 → 到達\n\nCommon collocations:\narrive at a conclusion → 得出結論\narrive at a decision → 作出決定\narrive in a country → 抵達某國",
+        "examples": [
+            "The train will arrive at nine o'clock."
+        ]
+    },
+    {
+        "word": "arrow",
+        "phonetic": "/ˈær.əʊ/",
+        "pos": "",
+        "translation": "n. 箭；箭頭；箭頭符號",
+        "roots": "Word formation:\n源自古英語 arwe → 箭\n\nCommon collocations:\narrow symbol → 箭頭符號\narrow pointing to → 指向……的箭頭",
+        "examples": [
+            "The sign had an arrow pointing to the exit."
+        ]
+    },
+    {
+        "word": "art",
+        "phonetic": "/ɑːt/",
+        "pos": "",
+        "translation": "n. 藝術；美術；技巧；藝術品",
+        "roots": "Word formation:\n源自拉丁語 ars「技巧；藝術」→ 藝術；技巧\n\nCommon collocations:\nwork of art → 藝術品\nfine art → 美術\nthe art of doing sth → 做某事的技巧",
+        "examples": [
+            "She studied art at university."
+        ]
+    },
+    {
+        "word": "article",
+        "phonetic": "/ˈɑː.tɪ.kl/",
+        "pos": "",
+        "translation": "n. 文章；物品；冠詞；條款",
+        "roots": "Word formation:\n源自拉丁語 articulus「小部分；關節」→ 一項；文章；條款\n\nCommon collocations:\narticle on/about sth → 關於某事的文章\nresearch article → 研究論文\narticle of clothing → 一件衣物",
+        "examples": [
+            "I read an interesting article in the newspaper."
+        ]
+    },
+    {
+        "word": "artificial",
+        "phonetic": "/ˌɑː.tɪˈfɪʃ.əl/",
+        "pos": "",
+        "translation": "a. 人造的；人工的；不自然的",
+        "roots": "Word formation:\nart（技藝）+ -fic（= facere，做）+ -ial → 人工製作的\n\nCommon collocations:\nartificial intelligence → 人工智慧\nartificial environment → 人工環境\nartificially created → 人為創造的",
+        "examples": [
+            "The lake was filled with artificial light at night."
+        ]
+    },
+    {
+        "word": "artificially",
+        "phonetic": "/ˌɑː.tɪˈfɪʃ.əl.i/",
+        "pos": "",
+        "translation": "adv. 人工地；人為地；不自然地",
+        "roots": "Word formation:\nartificial + -ly（副詞後綴）\n\nCommon collocations:\nartificially created → 人為創造的\nartificially induced → 人為誘導的",
+        "examples": [
+            "The prices were artificially kept low."
+        ]
+    },
+    {
+        "word": "artist",
+        "phonetic": "/ˈɑː.tɪst/",
+        "pos": "",
+        "translation": "n. 藝術家；畫家；藝術工作者",
+        "roots": "Word formation:\nart + -ist（表示從事某事的人）→ 藝術家\n\nCommon collocations:\nvisual artist → 視覺藝術家\nprofessional artist → 職業藝術家\nlocal artist → 當地藝術家",
+        "examples": [
+            "She is a talented young artist."
+        ]
+    },
+    {
+        "word": "artistic",
+        "phonetic": "/ɑːˈtɪs.tɪk/",
+        "pos": "",
+        "translation": "a. 藝術的；富有藝術性的",
+        "roots": "Word formation:\nartist + -ic（形容詞後綴）\n\nCommon collocations:\nartistic expression → 藝術表現\nartistic style → 藝術風格\nartistic value → 藝術價值",
+        "examples": [
+            "He has a very artistic style of painting."
+        ]
+    },
+    {
+        "word": "as",
+        "phonetic": "/æz/",
+        "pos": "",
+        "translation": "prep. 作為；當作\nconj. 當……時；因為；像……一樣\nadv. 同樣地",
+        "roots": "Word formation:\n源自古英語 alswa「同樣地」→ as\n\nCommon collocations:\nas a result → 因此\nas well as → 以及；和……一樣\nas opposed to → 與……相對",
+        "examples": [
+            "As I was leaving, it started to rain."
+        ]
+    },
+    {
+        "word": "as soon as",
+        "phonetic": "",
+        "pos": "",
+        "translation": "conj. 一……就……",
+        "roots": "Word formation:\nas + soon + as → 一……就……\n\nCommon collocations:\nas soon as possible → 盡可能快地\nas soon as → 一……就……",
+        "examples": [
+            "Call me as soon as you arrive."
+        ]
+    },
+    {
+        "word": "as well",
+        "phonetic": "",
+        "pos": "",
+        "translation": "adv. 也；同樣",
+        "roots": "Word formation:\nas + well → 同樣地\n\nCommon collocations:\nas well as → 以及；除……之外還\nmay/might as well → 不妨；還不如",
+        "examples": [
+            "She speaks German as well as English."
+        ]
+    },
+    {
+        "word": "ashamed",
+        "phonetic": "/əˈʃeɪmd/",
+        "pos": "",
+        "translation": "a. 慚愧的；羞恥的；不好意思的",
+        "roots": "Word formation:\na-（處於）+ shame + -ed → 感到羞恥的\n\nCommon collocations:\nbe ashamed of sth → 為某事感到羞恥\nbe ashamed to do sth → 羞於做某事",
+        "examples": [
+            "He felt ashamed of his behaviour."
+        ]
+    },
+    {
+        "word": "aside",
+        "phonetic": "/əˈsaɪd/",
+        "pos": "",
+        "translation": "n. 題外話；旁白\nadv. 在一邊；撇開",
+        "roots": "Word formation:\na-（在）+ side（旁邊）→ 在一邊\n\nCommon collocations:\nset aside → 留出；把……放在一邊\nput aside → 把……放在一邊\naside from → 除……之外",
+        "examples": [
+            "She put her book aside and answered the phone."
+        ]
+    },
+    {
+        "word": "aside from",
+        "phonetic": "",
+        "pos": "",
+        "translation": "prep. 除……之外；除了……還",
+        "roots": "Word formation:\naside（在一邊）+ from（從）→ 從……分開\n\nCommon collocations:\napart from → 除……之外\naside from this → 除此之外",
+        "examples": [
+            "Aside from a few mistakes, the essay was good."
+        ]
+    },
+    {
+        "word": "ask",
+        "phonetic": "/ɑːsk/",
+        "pos": "",
+        "translation": "vt. 問；要求；請求；邀請\nvi. 詢問；要求",
+        "roots": "Word formation:\n源自古英語 ascian「詢問」→ 問\n\nCommon collocations:\nask for sth → 要求／索取某物\nask sb to do sth → 要求某人做某事\nask about sth → 詢問某事",
+        "examples": [
+            "Can I ask you a question?"
+        ]
+    },
+    {
+        "word": "asleep",
+        "phonetic": "/əˈsliːp/",
+        "pos": "",
+        "translation": "a. 睡著的",
+        "roots": "Word formation:\na-（處於）+ sleep（睡眠）→ 睡著的\n\nCommon collocations:\nfall asleep → 入睡\nbe fast asleep → 熟睡\nstay asleep → 保持睡眠狀態",
+        "examples": [
+            "The baby fell asleep in the car."
+        ]
+    },
+    {
+        "word": "aspect",
+        "phonetic": "/ˈæs.pekt/",
+        "pos": "",
+        "translation": "n. 方面；層面；外觀",
+        "roots": "Word formation:\n源自拉丁語 aspectus「看；外觀」→ 方面\n\nCommon collocations:\nan aspect of sth → 某事的一個方面\nkey aspect → 關鍵方面\nevery aspect → 每一方面",
+        "examples": [
+            "There are many aspects of city life to enjoy."
+        ]
+    },
+    {
+        "word": "assist",
+        "phonetic": "/əˈsɪst/",
+        "pos": "",
+        "translation": "v. 幫助；協助；促進",
+        "roots": "Word formation:\nas-（= ad，向）+ sist（= sistere，站立）→ 站在旁邊幫忙\n\nCommon collocations:\nassist sb with sth → 協助某人做某事\nassist in doing sth → 協助做某事\nassist with sth → 協助某事",
+        "examples": [
+            "The nurse will assist the doctor during surgery."
+        ]
+    },
+    {
+        "word": "assistance",
+        "phonetic": "/əˈsɪs.təns/",
+        "pos": "",
+        "translation": "n. 協助；援助",
+        "roots": "Word formation:\nassist + -ance（名詞後綴）\n\nCommon collocations:\nprovide assistance → 提供協助\nfinancial assistance → 財政援助\ntechnical assistance → 技術援助",
+        "examples": [
+            "Thank you for your assistance with the project."
+        ]
+    },
+    {
+        "word": "assistant",
+        "phonetic": "/əˈsɪs.tənt/",
+        "pos": "",
+        "translation": "n. 助手；助理\na. 輔助的",
+        "roots": "Word formation:\nassist + -ant（表示人／具有……作用）\n\nCommon collocations:\nresearch assistant → 研究助理\nteaching assistant → 助教\nassistant manager → 經理助理",
+        "examples": [
+            "She works as a shop assistant."
+        ]
+    },
+    {
+        "word": "associate",
+        "phonetic": "v. /əˈsəʊ.si.eɪt/, n./a. /əˈsəʊ.si.ət/",
+        "pos": "",
+        "translation": "n. 同伴；夥伴；同事\nv. 聯繫；聯想；交往",
+        "roots": "Word formation:\nas-（= ad，向）+ soci（= socius，夥伴）+ -ate → 聯合\n\nCommon collocations:\nassociate A with B → 把 A 與 B 聯繫起來\nbe associated with → 與……有關\nassociate with sb → 與某人交往",
+        "examples": [
+            "I associate that song with my school days."
+        ]
+    },
+    {
+        "word": "associated with",
+        "phonetic": "",
+        "pos": "",
+        "translation": "與……有關；與……相聯繫",
+        "roots": "Word formation:\nassociate + -ed + with → 與……聯繫\n\nCommon collocations:\nbe closely associated with → 與……密切相關\nbe strongly associated with → 與……密切相關",
+        "examples": [
+            "Smoking is associated with many health problems."
+        ]
+    },
+    {
+        "word": "association",
+        "phonetic": "/əˌsəʊ.siˈeɪ.ʃən/",
+        "pos": "",
+        "translation": "n. 聯繫；協會；關聯",
+        "roots": "Word formation:\nassociate + -ion（名詞後綴）\n\nCommon collocations:\nassociation with sth → 與某事的關聯\nin association with → 與……合作／聯合\ntrade association → 行業協會",
+        "examples": [
+            "He is a member of the local football association."
+        ]
+    },
+    {
+        "word": "assume",
+        "phonetic": "/əˈsjuːm/",
+        "pos": "",
+        "translation": "vt. 假定；認為；承擔；呈現",
+        "roots": "Word formation:\nas-（= ad，向）+ sume（= sumere，拿取）→ 承擔；假定\n\nCommon collocations:\nassume that → 假定／認為……\nassume responsibility → 承擔責任\nassume a role → 擔任角色",
+        "examples": [
+            "I assumed you already knew about the meeting."
+        ]
+    },
+    {
+        "word": "assure",
+        "phonetic": "/əˈʃɔːr/",
+        "pos": "",
+        "translation": "vt. 向……保證；使確信",
+        "roots": "Word formation:\nas-（= ad，向）+ sure（確定的）→ 使確定 → 保證\n\nCommon collocations:\nassure sb that → 向某人保證……\nassure sb of sth → 向某人保證某事\nbe assured that → 確信……",
+        "examples": [
+            "I can assure you the food is safe."
+        ]
+    },
+    {
+        "word": "at",
+        "phonetic": "/æt/",
+        "pos": "",
+        "translation": "prep. 在；向；對",
+        "roots": "Word formation:\n源自古英語 æt「在；向」\n\nCommon collocations:\nat least → 至少\nat first → 起初\nat risk → 處於風險中",
+        "examples": [
+            "She arrived at six o'clock."
+        ]
+    },
+    {
+        "word": "at first",
+        "phonetic": "",
+        "pos": "",
+        "translation": "phr. 起先；最初",
+        "roots": "Word formation:\nat + first → 在最初\n\nCommon collocations:\nat first glance → 乍看之下\nat first → 起初",
+        "examples": [
+            "At first, I didn't understand the instructions."
+        ]
+    },
+    {
+        "word": "at least",
+        "phonetic": "",
+        "pos": "",
+        "translation": "phr. 至少；起碼",
+        "roots": "Word formation:\nat + least → 至少\n\nCommon collocations:\nat least one → 至少一個\nat least partly → 至少部分地",
+        "examples": [
+            "You should drink at least two litres of water a day."
+        ]
+    },
+    {
+        "word": "atmosphere",
+        "phonetic": "/ˈæt.mə.sfɪər/",
+        "pos": "",
+        "translation": "n. 大氣；大氣層；氣氛；氛圍",
+        "roots": "Word formation:\natmo（= atmos，蒸汽；氣）+ sphere（球體）→ 大氣層\n\nCommon collocations:\nthe Earth's atmosphere → 地球大氣層\natmospheric pollution → 大氣污染\nfriendly atmosphere → 友善的氛圍",
+        "examples": [
+            "The restaurant has a warm, friendly atmosphere."
+        ]
+    },
+    {
+        "word": "atom",
+        "phonetic": "/ˈæt.əm/",
+        "pos": "",
+        "translation": "n. 原子",
+        "roots": "Word formation:\na-（不）+ tom（切割）→ 不可再分的 → 原子\n\nCommon collocations:\natomic structure → 原子結構\nsplit an atom → 分裂原子\natom bomb → 原子彈",
+        "examples": [
+            "An atom is the smallest unit of matter."
+        ]
+    },
+    {
+        "word": "attach",
+        "phonetic": "/əˈtætʃ/",
+        "pos": "",
+        "translation": "vt. 附上；使依附；把……固定在……上\nvi. 附屬；與……有關",
+        "roots": "Word formation:\nat-（= ad，向）+ tach（固定；附著）→ 附上\n\nCommon collocations:\nattach A to B → 把 A 附在 B 上\nbe attached to → 附在……上；依戀……\nattach importance to → 重視……",
+        "examples": [
+            "Please attach your photo to the application."
+        ]
+    },
+    {
+        "word": "attached",
+        "phonetic": "/əˈtætʃt/",
+        "pos": "",
+        "translation": "a. 附加的；附著的；依戀的",
+        "roots": "Word formation:\nattach + -ed（形容詞後綴）\n\nCommon collocations:\nbe attached to → 附在……上；依戀……\nattached file → 附件",
+        "examples": [
+            "I have attached the file to this email."
+        ]
+    },
+    {
+        "word": "attack",
+        "phonetic": "/əˈtæk/",
+        "pos": "",
+        "translation": "n. 攻擊；抨擊；疾病發作\nv. 攻擊；抨擊",
+        "roots": "Word formation:\n源自義大利語 attaccare「附著；攻擊」→ 攻擊\n\nCommon collocations:\nattack a problem → 著手處理問題\nlaunch an attack → 發動攻擊\nheart attack → 心臟病發作",
+        "examples": [
+            "The city came under attack during the war."
+        ]
+    },
+    {
+        "word": "attempt",
+        "phonetic": "/əˈtempt/",
+        "pos": "",
+        "translation": "n. 嘗試；企圖\nv. 嘗試；企圖",
+        "roots": "Word formation:\nat-（= ad，向）+ tempt（= temptare，試探）→ 嘗試\n\nCommon collocations:\nattempt to do sth → 試圖做某事\nmake an attempt → 作出嘗試\nsuccessful attempt → 成功的嘗試",
+        "examples": [
+            "She made an attempt to fix the printer."
+        ]
+    },
+    {
+        "word": "attempted",
+        "phonetic": "/əˈtemp.tɪd/",
+        "pos": "",
+        "translation": "a. 企圖的；未遂的",
+        "roots": "Word formation:\nattempt + -ed（形容詞後綴）\n\nCommon collocations:\nattempted murder → 謀殺未遂\nattempted escape → 試圖逃跑",
+        "examples": [
+            "He attempted to climb the mountain alone."
+        ]
+    },
+    {
+        "word": "attend",
+        "phonetic": "/əˈtend/",
+        "pos": "",
+        "translation": "v. 參加；出席；照料；專心於",
+        "roots": "Word formation:\nat-（= ad，向）+ tend（= tendere，伸展；注意）→ 關注 → 參加\n\nCommon collocations:\nattend a meeting → 參加會議\nattend school → 上學\nattend to → 處理；照料",
+        "examples": [
+            "All employees must attend the meeting."
+        ]
+    },
+    {
+        "word": "attention",
+        "phonetic": "/əˈten.ʃən/",
+        "pos": "",
+        "translation": "n. 注意；注意力；關注",
+        "roots": "Word formation:\nattend + -ion（名詞後綴）\n\nCommon collocations:\npay attention to → 注意……\ndraw attention to → 引起對……的注意\nattention to detail → 對細節的重視",
+        "examples": [
+            "Pay attention to the teacher, please."
+        ]
+    },
+    {
+        "word": "attitude",
+        "phonetic": "/ˈæt.ɪ.tjuːd/",
+        "pos": "",
+        "translation": "n. 態度；看法；立場",
+        "roots": "Word formation:\n源自拉丁語 aptitudo「適合；姿態」→ 態度\n\nCommon collocations:\nattitude towards/to → 對……的態度\npositive attitude → 積極態度\nattitude to work → 對工作的態度",
+        "examples": [
+            "He has a positive attitude towards life."
+        ]
+    },
+    {
+        "word": "attorney",
+        "phonetic": "/əˈtɜː.ni/",
+        "pos": "",
+        "translation": "n. 律師；代理人",
+        "roots": "Word formation:\nat-（= ad，向）+ tourn（= tourner，轉）→ 受委託代表他人\n\nCommon collocations:\nattorney general → 司法部長／檢察總長\npower of attorney → 授權委託書",
+        "examples": [
+            "She hired an attorney to handle the case."
+        ]
+    },
+    {
+        "word": "attract",
+        "phonetic": "/əˈtrækt/",
+        "pos": "",
+        "translation": "v. 吸引；引起",
+        "roots": "Word formation:\nat-（= ad，向）+ tract（= trahere，拉）→ 拉向自己 → 吸引\n\nCommon collocations:\nattract attention → 吸引注意\nattract investment → 吸引投資\nattract tourists → 吸引遊客",
+        "examples": [
+            "Bright colours attract insects to flowers."
+        ]
+    },
+    {
+        "word": "attraction",
+        "phonetic": "/əˈtræk.ʃən/",
+        "pos": "",
+        "translation": "n. 吸引力；吸引人的事物；景點",
+        "roots": "Word formation:\nattract + -ion（名詞後綴）\n\nCommon collocations:\ntourist attraction → 旅遊景點\nmain attraction → 主要吸引力\nattraction to → 對……的吸引力",
+        "examples": [
+            "The castle is the town's main tourist attraction."
+        ]
+    },
+    {
+        "word": "attractive",
+        "phonetic": "/əˈtræk.tɪv/",
+        "pos": "",
+        "translation": "a. 有吸引力的；迷人的；有吸引力的（條件等）",
+        "roots": "Word formation:\nattract + -ive（形容詞後綴）\n\nCommon collocations:\nattractive option → 有吸引力的選擇\nattractive offer → 有吸引力的條件\nattractive destination → 有吸引力的目的地",
+        "examples": [
+            "She wore a very attractive dress to the party."
+        ]
+    },
+    {
+        "word": "audience",
+        "phonetic": "/ˈɔː.di.əns/",
+        "pos": "",
+        "translation": "n. 聽眾；觀眾；讀者",
+        "roots": "Word formation:\naud（= audire，聽）+ -ience → 聽眾\n\nCommon collocations:\ntarget audience → 目標受眾\nlarge audience → 大量觀眾\nreach an audience → 接觸到受眾",
+        "examples": [
+            "The audience clapped loudly after the concert."
+        ]
+    },
+    {
+        "word": "august",
+        "phonetic": "n. /ˈɔː.gəst/, a. /ɔːˈgʌst/",
+        "pos": "",
+        "translation": "n. 八月\na. 威嚴的；令人敬畏的",
+        "roots": "Word formation:\n月份源自拉丁語 Augustus；形容詞源自拉丁語 augustus「尊貴的」\n\nCommon collocations:\nin August → 在八月\nAugust 15 → 8 月 15 日",
+        "examples": [
+            "We usually go on holiday in August."
+        ]
+    },
+    {
+        "word": "aunt",
+        "phonetic": "/ɑːnt/",
+        "pos": "",
+        "translation": "n. 姑媽；阿姨；舅媽",
+        "roots": "Word formation:\n源自古法語 ante → 姑母；姨母\n\nCommon collocations:\nmy aunt → 我的姑媽／阿姨\nAunt + name → 姑媽／阿姨＋姓名",
+        "examples": [
+            "My aunt lives in Canada."
+        ]
+    },
+    {
+        "word": "author",
+        "phonetic": "/ˈɔː.θər/",
+        "pos": "",
+        "translation": "n. 作者；作家；創始人\nv. 撰寫；創作",
+        "roots": "Word formation:\nauth（= auctor，創造者）+ -or（表示人）→ 作者\n\nCommon collocations:\nauthor of sth → 某作品的作者\nauthor a book → 撰寫書籍\nlead author → 第一作者",
+        "examples": [
+            "The author signed copies of her new book."
+        ]
+    },
+    {
+        "word": "authority",
+        "phonetic": "/ɔːˈθɒr.ə.ti/",
+        "pos": "",
+        "translation": "n. 權力；權威；當局；權威人士",
+        "roots": "Word formation:\nauthor + -ity（名詞後綴）→ 權威\n\nCommon collocations:\nauthority on sth → 某領域的權威\nlocal authorities → 地方當局\nhave authority to do sth → 有權做某事",
+        "examples": [
+            "The local authority is responsible for the roads."
+        ]
+    },
+    {
+        "word": "automatic",
+        "phonetic": "/ˌɔː.təˈmæt.ɪk/",
+        "pos": "",
+        "translation": "a. 自動的；無意識的\nn. 自動裝置",
+        "roots": "Word formation:\nauto（自己）+ mat（= automatos，自動的）+ -ic → 自動的\n\nCommon collocations:\nautomatic system → 自動系統\nautomatic response → 自動反應\nautomatic process → 自動化過程",
+        "examples": [
+            "This washing machine has an automatic setting."
+        ]
+    },
+    {
+        "word": "automatically",
+        "phonetic": "/ˌɔː.təˈmæt.ɪ.kli/",
+        "pos": "",
+        "translation": "adv. 自動地；不假思索地",
+        "roots": "Word formation:\nautomatic + -ly（副詞後綴）\n\nCommon collocations:\nwork automatically → 自動運作\nautomatically generated → 自動生成的",
+        "examples": [
+            "The lights turn on automatically at night."
+        ]
+    },
+    {
+        "word": "autumn",
+        "phonetic": "/ˈɔː.təm/",
+        "pos": "",
+        "translation": "n. 秋天；秋季",
+        "roots": "Word formation:\n源自拉丁語 autumnus → 秋季\n\nCommon collocations:\nin autumn → 在秋季\nautumn months → 秋季月份",
+        "examples": [
+            "The leaves change colour in autumn."
+        ]
+    },
+    {
+        "word": "available",
+        "phonetic": "/əˈveɪ.lə.bl/",
+        "pos": "",
+        "translation": "a. 可獲得的；可利用的；有空的",
+        "roots": "Word formation:\navail（有用；有益）+ -able（可……的）→ 可利用的\n\nCommon collocations:\navailable to sb → 對某人可獲得／可使用\nbe available for → 可用於……\navailable resources → 可利用的資源",
+        "examples": [
+            "The manager is not available right now."
+        ]
+    },
+    {
+        "word": "average",
+        "phonetic": "/ˈæv.ər.ɪdʒ/",
+        "pos": "",
+        "translation": "n. 平均數；平均水平\na. 平均的；普通的\nv. 平均為；計算平均值",
+        "roots": "Word formation:\n源自古法語 averaie「海損分攤；平均」→ 平均\n\nCommon collocations:\non average → 平均而言\naverage age → 平均年齡\nabove/below average → 高於／低於平均水平",
+        "examples": [
+            "The average temperature in July is thirty degrees."
+        ]
+    },
+    {
+        "word": "avoid",
+        "phonetic": "/əˈvɔɪd/",
+        "pos": "",
+        "translation": "vt. 避免；防止；避開",
+        "roots": "Word formation:\na-（遠離）+ void（空）→ 避開\n\nCommon collocations:\navoid doing sth → 避免做某事\navoid conflict → 避免衝突\navoid the risk of → 避免……的風險",
+        "examples": [
+            "Try to avoid busy roads during rush hour."
+        ]
+    },
+    {
+        "word": "awake",
+        "phonetic": "/əˈweɪk/",
+        "pos": "",
+        "translation": "a. 醒著的\nv. 喚醒；醒來；意識到",
+        "roots": "Word formation:\na-（處於）+ wake（醒）→ 醒著\n\nCommon collocations:\nstay awake → 保持清醒\nwake up → 醒來\nawake to the fact → 意識到事實",
+        "examples": [
+            "The noise kept me awake all night."
+        ]
+    },
+    {
+        "word": "award",
+        "phonetic": "/əˈwɔːd/",
+        "pos": "",
+        "translation": "n. 獎項；獎品；裁定\nv. 授予；判給",
+        "roots": "Word formation:\na-（= ad，向）+ ward（守護；給予）→ 授予\n\nCommon collocations:\nwin an award → 獲獎\naward sth to sb → 把某物授予某人\naward a prize → 頒獎",
+        "examples": [
+            "She received an award for her research."
+        ]
+    },
+    {
+        "word": "aware",
+        "phonetic": "/əˈweər/",
+        "pos": "",
+        "translation": "a. 意識到的；知道的",
+        "roots": "Word formation:\na-（處於）+ ware（警覺的）→ 意識到的\n\nCommon collocations:\nbe aware of sth → 意識到／知道某事\nbecome aware of → 開始意識到\nmake sb aware of → 使某人意識到",
+        "examples": [
+            "Are you aware of the new rules?"
+        ]
+    },
+    {
+        "word": "away",
+        "phonetic": "/əˈweɪ/",
+        "pos": "",
+        "translation": "adv. 離去；離開；不在",
+        "roots": "Word formation:\na-（在）+ way（路）→ 離開原路\n\nCommon collocations:\naway from → 遠離……\nright away → 立即\nfar away → 遙遠地",
+        "examples": [
+            "The beach is two miles away from here."
+        ]
+    },
+    {
+        "word": "awful",
+        "phonetic": "/ˈɔː.fəl/",
+        "pos": "",
+        "translation": "a. 可怕的；糟糕的；極其嚴重的",
+        "roots": "Word formation:\nawe（敬畏）+ -ful（充滿……的）→ 令人敬畏的 → 可怕的\n\nCommon collocations:\nawful lot → 大量（口語）\nawful mistake → 嚴重錯誤\nawful consequences → 可怕的後果",
+        "examples": [
+            "We had awful weather during our holiday."
+        ]
+    },
+    {
+        "word": "awfully",
+        "phonetic": "/ˈɔː.fəl.i/",
+        "pos": "",
+        "translation": "adv. 非常；極其；糟糕地",
+        "roots": "Word formation:\nawful + -ly（副詞後綴）\n\nCommon collocations:\nawfully difficult → 非常困難\nawfully sorry → 非常抱歉",
+        "examples": [
+            "I'm awfully sorry for the delay."
+        ]
+    },
+    {
+        "word": "awkward",
+        "phonetic": "/ˈɔː.kwəd/",
+        "pos": "",
+        "translation": "a. 尷尬的；笨拙的；棘手的；不方便的",
+        "roots": "Word formation:\nawk（反向）+ -ward（方向）→ 彆扭的\n\nCommon collocations:\nawkward situation → 尷尬局面\nawkward question → 棘手問題\nawkward to use → 使用不方便",
+        "examples": [
+            "There was an awkward silence after his joke."
+        ]
+    },
+    {
+        "word": "awkwardly",
+        "phonetic": "/ˈɔː.kwəd.li/",
+        "pos": "",
+        "translation": "adv. 笨拙地；尷尬地；不自然地",
+        "roots": "Word formation:\nawkward + -ly（副詞後綴）\n\nCommon collocations:\nawkwardly worded → 措辭不自然的\nmove awkwardly → 笨拙地移動",
+        "examples": [
+            "He awkwardly tried to explain the mistake."
+        ]
+    },
+    {
+        "word": "baby",
+        "phonetic": "/ˈbeɪ.bi/",
+        "pos": "",
+        "translation": "n. 嬰兒；嬰孩",
+        "roots": "Word formation:\n源自中古英語 babi → 嬰兒\n\nCommon collocations:\nbaby food → 嬰兒食品\nbaby boom → 嬰兒潮\nbaby boomers → 嬰兒潮世代",
+        "examples": [
+            "The baby slept for three hours."
+        ]
+    },
+    {
+        "word": "back",
+        "phonetic": "/bæk/",
+        "pos": "",
+        "translation": "n. 背部；後面；後方\na. 後面的\nadv. 向後；回到原處\nv. 支持；使後退",
+        "roots": "Word formation:\n源自古英語 bæc → 背部；後方\n\nCommon collocations:\nback up → 支持；備份\nback and forth → 來回\nback to → 回到……",
+        "examples": [
+            "Put the book back on the shelf."
+        ]
+    },
+    {
+        "word": "background",
+        "phonetic": "/ˈbæk.graʊnd/",
+        "pos": "",
+        "translation": "n. 背景；背景資料；經歷",
+        "roots": "Word formation:\nback（後）+ ground（地）→ 背景\n\nCommon collocations:\nbackground information → 背景資料\neducational background → 教育背景\ncultural background → 文化背景",
+        "examples": [
+            "She has a strong background in mathematics."
+        ]
+    },
+    {
+        "word": "backward",
+        "phonetic": "/ˈbæk.wəd/",
+        "pos": "",
+        "translation": "adv. 向後地；相反地\na. 向後的；落後的",
+        "roots": "Word formation:\nback（向後）+ -ward（方向後綴）\n\nCommon collocations:\nbackward movement → 向後移動\nbackward-looking → 向後看的；保守的\nbackward areas → 落後地區",
+        "examples": [
+            "He took a backward step towards the door."
+        ]
+    },
+    {
+        "word": "backwards",
+        "phonetic": "/ˈbæk.wədz/",
+        "pos": "",
+        "translation": "adv. 向後；倒退地",
+        "roots": "Word formation:\nbackward + -s → 向後\n\nCommon collocations:\nmove backwards → 向後移動\nlook backwards → 回顧過去",
+        "examples": [
+            "Count backwards from ten to one."
+        ]
+    },
+    {
+        "word": "bacteria",
+        "phonetic": "/bækˈtɪə.ri.ə/",
+        "pos": "",
+        "translation": "n. 細菌（bacterium 的複數）",
+        "roots": "Word formation:\nbacter（= baktērion，小棍）+ -ia → 細菌\n\nCommon collocations:\nharmful bacteria → 有害細菌\nbacteria in water → 水中的細菌\nbacterial infection → 細菌感染",
+        "examples": [
+            "Some bacteria can cause serious illness."
+        ]
+    },
+    {
+        "word": "bad",
+        "phonetic": "/bæd/",
+        "pos": "",
+        "translation": "a. 壞的；差的；有害的；嚴重的",
+        "roots": "Word formation:\n源自古英語 bæddel → 壞的\n\nCommon collocations:\nbad for sth → 對……有害\nbad effect → 不良影響\nbadly affected → 受到嚴重影響",
+        "examples": [
+            "The weather was really bad yesterday."
+        ]
+    },
+    {
+        "word": "badly",
+        "phonetic": "/ˈbæd.li/",
+        "pos": "",
+        "translation": "adv. 嚴重地；糟糕地；很，非常",
+        "roots": "Word formation:\nbad + -ly（副詞後綴）\n\nCommon collocations:\nbadly affected → 受到嚴重影響\nbadly needed → 急需的\nbadly damaged → 嚴重受損",
+        "examples": [
+            "The team played badly in the second half."
+        ]
+    },
+    {
+        "word": "bag",
+        "phonetic": "/bæg/",
+        "pos": "",
+        "translation": "n. 袋子；袋狀物\nv. 把……裝袋；搶先取得",
+        "roots": "Word formation:\n源自古諾斯語 baggi → 袋子\n\nCommon collocations:\nbag of sth → 一袋……\nplastic bag → 塑膠袋\nshopping bag → 購物袋",
+        "examples": [
+            "She packed her bag for the trip."
+        ]
+    },
+    {
+        "word": "baggage",
+        "phonetic": "/ˈbæg.ɪdʒ/",
+        "pos": "",
+        "translation": "n. 行李；負擔（比喻）",
+        "roots": "Word formation:\nbag（袋子）+ -age（名詞後綴）→ 行李\n\nCommon collocations:\nexcess baggage → 超額行李\nbaggage allowance → 行李限額\nemotional baggage → 情感包袱",
+        "examples": [
+            "Please collect your baggage at the airport."
+        ]
+    },
+    {
+        "word": "bake",
+        "phonetic": "/beɪk/",
+        "pos": "",
+        "translation": "v. 烘焙；烤\nn. 烘焙",
+        "roots": "Word formation:\n源自古英語 bacan → 烘烤\n\nCommon collocations:\nbake bread → 烤麵包\nbaked goods → 烘焙食品\nbaked potato → 烤馬鈴薯",
+        "examples": [
+            "We baked a cake for her birthday."
+        ]
+    },
+    {
+        "word": "balance",
+        "phonetic": "/ˈbæl.əns/",
+        "pos": "",
+        "translation": "n. 平衡；餘額；差額\nv. 平衡；權衡；使……保持平衡",
+        "roots": "Word formation:\n源自古法語 balance「天平」→ 平衡\n\nCommon collocations:\nmaintain a balance → 維持平衡\nstrike a balance → 找到平衡\nbalance A against B → 權衡 A 與 B",
+        "examples": [
+            "It's hard to balance work and family life."
+        ]
+    },
+    {
+        "word": "ball",
+        "phonetic": "/bɔːl/",
+        "pos": "",
+        "translation": "n. 球；球狀物；舞會\nv. 使成球形",
+        "roots": "Word formation:\n源自古諾斯語 bǫllr → 球\n\nCommon collocations:\nball game → 球類運動\nball of fire → 火球\non the ball → 反應敏捷（口語）",
+        "examples": [
+            "The children played with a red ball."
+        ]
+    },
+    {
+        "word": "ban",
+        "phonetic": "/bæn/",
+        "pos": "",
+        "translation": "n. 禁令；禁止\nv. 禁止；取締",
+        "roots": "Word formation:\n源自古英語 bannan「宣布；禁止」→ 禁止\n\nCommon collocations:\nban on sth → 對……的禁令\nban sb from doing sth → 禁止某人做某事\nimpose a ban → 實施禁令",
+        "examples": [
+            "The city plans to ban plastic bags."
+        ]
+    },
+    {
+        "word": "band",
+        "phonetic": "/bænd/",
+        "pos": "",
+        "translation": "n. 帶子；樂隊；群；波段\nv. 聯合；結合",
+        "roots": "Word formation:\n源自古法語 bande「帶；隊伍」→ 帶狀物；群體\n\nCommon collocations:\nband of → 一群……\nband together → 聯合起來\nbroadband → 寬頻",
+        "examples": [
+            "My brother plays guitar in a rock band."
+        ]
+    },
+    {
+        "word": "bandage",
+        "phonetic": "/ˈbæn.dɪdʒ/",
+        "pos": "",
+        "translation": "n. 繃帶\nv. 用繃帶包紮",
+        "roots": "Word formation:\nband（帶子）+ -age（名詞後綴）→ 繃帶\n\nCommon collocations:\napply a bandage → 敷／纏繃帶\nbandage a wound → 包紮傷口",
+        "examples": [
+            "The nurse put a bandage on his arm."
+        ]
+    },
+    {
+        "word": "bank",
+        "phonetic": "/bæŋk/",
+        "pos": "",
+        "translation": "n. 銀行；（河）岸；堤；庫存\nv. 把錢存入銀行；堆積",
+        "roots": "Word formation:\n銀行義源自義大利語 banco「長凳；櫃台」；河岸義源自日耳曼語詞源\n\nCommon collocations:\nbank account → 銀行帳戶\nbank loan → 銀行貸款\nriver bank → 河岸",
+        "examples": [
+            "I need to go to the bank this afternoon."
+        ]
+    },
+    {
+        "word": "bar",
+        "phonetic": "/bɑːr/",
+        "pos": "",
+        "translation": "n. 條；棒；酒吧；障礙（物）；酒吧櫃台\nv. 禁止；阻擋；排除",
+        "roots": "Word formation:\n源自古法語 barre「條；障礙」→ 條狀障礙物\n\nCommon collocations:\nbarrier to → ……的障礙\nbar sb from doing sth → 禁止某人做某事\nbar chart → 條形圖",
+        "examples": [
+            "We met for a drink at the bar."
+        ]
+    },
+    {
+        "word": "bargain",
+        "phonetic": "/ˈbɑː.gɪn/",
+        "pos": "",
+        "translation": "n. 交易；協議；特價商品\nv. 討價還價",
+        "roots": "Word formation:\n源自古法語 bargaigner「討價還價」\n\nCommon collocations:\na bargain → 划算的交易\nbargain with sb → 與某人討價還價\nbargain price → 特價",
+        "examples": [
+            "She found a real bargain at the sale."
+        ]
+    },
+    {
+        "word": "barrier",
+        "phonetic": "/ˈbær.i.ər/",
+        "pos": "",
+        "translation": "n. 障礙；障礙物；柵欄",
+        "roots": "Word formation:\nbar（棒；柵）+ -rier → 障礙物\n\nCommon collocations:\nbarrier to sth → ……的障礙\nlanguage barrier → 語言障礙\nremove a barrier → 消除障礙",
+        "examples": [
+            "Language can be a barrier when travelling."
+        ]
+    },
+    {
+        "word": "base",
+        "phonetic": "/beɪs/",
+        "pos": "",
+        "translation": "n. 基礎；底部；基地；基準\nv. 以……為基礎\na. 卑鄙的；低劣的",
+        "roots": "Word formation:\n源自希臘語 basis「步；基礎」→ 基礎\n\nCommon collocations:\nbase A on B → 以 B 為基礎建立 A\non the basis of → 根據……\nbase rate → 基準利率",
+        "examples": [
+            "The soldiers returned to their base."
+        ]
+    },
+    {
+        "word": "based on",
+        "phonetic": "",
+        "pos": "",
+        "translation": "phr. 基於；根據",
+        "roots": "Word formation:\nbased + on → 以……為基礎\n\nCommon collocations:\nbased on evidence → 基於證據\nbased on the assumption that → 基於……的假設",
+        "examples": [
+            "The film is based on a true story."
+        ]
+    },
+    {
+        "word": "basic",
+        "phonetic": "/ˈbeɪ.sɪk/",
+        "pos": "",
+        "translation": "n. 基本要素\na. 基本的；基礎的",
+        "roots": "Word formation:\nbase + -ic（形容詞後綴）\n\nCommon collocations:\nbasic needs → 基本需求\nbasic principle → 基本原則\nbasic knowledge → 基礎知識",
+        "examples": [
+            "This course covers the basic rules of grammar."
+        ]
+    },
+    {
+        "word": "basically",
+        "phonetic": "/ˈbeɪ.sɪ.kli/",
+        "pos": "",
+        "translation": "adv. 基本上；主要地；總的來說",
+        "roots": "Word formation:\nbasic + -ally（副詞後綴）\n\nCommon collocations:\nbasically the same → 基本相同\nbasically because → 主要因為",
+        "examples": [
+            "Basically, we need more time to finish."
+        ]
+    },
+    {
+        "word": "basis",
+        "phonetic": "/ˈbeɪ.sɪs/",
+        "pos": "",
+        "translation": "n. 基礎；依據；基準",
+        "roots": "Word formation:\nbase 的名詞形式\n\nCommon collocations:\non the basis of → 根據；以……為基礎\non a daily basis → 每天；按日\nbasis for → ……的依據",
+        "examples": [
+            "We meet on a weekly basis."
+        ]
+    },
+    {
+        "word": "bath",
+        "phonetic": "/bɑːθ/",
+        "pos": "",
+        "translation": "n. 沐浴；浴缸；浴室",
+        "roots": "Word formation:\n源自古英語 bæþ → 沐浴\n\nCommon collocations:\ntake a bath → 洗澡\nbath water → 洗澡水",
+        "examples": [
+            "He took a hot bath after the game."
+        ]
+    },
+    {
+        "word": "bathroom",
+        "phonetic": "/ˈbɑːθ.rʊm/",
+        "pos": "",
+        "translation": "n. 浴室；衛生間",
+        "roots": "Word formation:\nbath（洗澡）+ room（房間）\n\nCommon collocations:\nbathroom facilities → 衛生設施\npublic bathroom → 公共衛生間",
+        "examples": [
+            "The bathroom is at the end of the hall."
+        ]
+    },
+    {
+        "word": "battery",
+        "phonetic": "/ˈbæt.ər.i/",
+        "pos": "",
+        "translation": "n. 電池；電池組",
+        "roots": "Word formation:\n源自法語 batterie「打擊；一組」→ 一組炮／電池組\n\nCommon collocations:\nbattery life → 電池續航時間\nbattery power → 電池電力\nrecharge a battery → 給電池充電",
+        "examples": [
+            "My phone battery is almost dead."
+        ]
+    },
+    {
+        "word": "battle",
+        "phonetic": "/ˈbæt.l/",
+        "pos": "",
+        "translation": "n. 戰役；戰鬥；鬥爭\nv. 作戰；與……鬥爭",
+        "roots": "Word formation:\n源自古法語 bataille「戰鬥」\n\nCommon collocations:\nbattle against → 與……鬥爭\nbattle for → 為……而鬥爭\nfight a battle → 進行鬥爭",
+        "examples": [
+            "The soldiers fought a long battle."
+        ]
+    },
+    {
+        "word": "bay",
+        "phonetic": "/beɪ/",
+        "pos": "",
+        "translation": "n. 海灣；灣",
+        "roots": "Word formation:\n源自法語 baie → 海灣\n\nCommon collocations:\ncoastal bay → 沿海海灣\nbay area → 海灣地區",
+        "examples": [
+            "The boat sailed into the quiet bay."
+        ]
+    },
+    {
+        "word": "be",
+        "phonetic": "/biː/",
+        "pos": "",
+        "translation": "v. 是；在；存在；表示",
+        "roots": "Word formation:\n源自古英語 bēon / wesan「存在；是」\n\nCommon collocations:\nbe likely to → 很可能……\nbe based on → 基於……\nbe involved in → 參與；涉及",
+        "examples": [
+            "She wants to be a teacher."
+        ]
+    },
+    {
+        "word": "be called",
+        "phonetic": "",
+        "pos": "",
+        "translation": "phr. 被叫做……；被稱為……",
+        "roots": "Word formation:\nbe + called（call 的過去分詞）→ 被稱為\n\nCommon collocations:\nbe called after → 以……命名\nbe called upon to do sth → 被要求做某事",
+        "examples": [
+            "This tool is called a wrench."
+        ]
+    },
+    {
+        "word": "be going to",
+        "phonetic": "",
+        "pos": "",
+        "translation": "phr. 將要；打算",
+        "roots": "Word formation:\nbe + going to → 表示將來計畫或預期\n\nCommon collocations:\nbe going to do sth → 打算做某事\nbe going to be → 將會是……",
+        "examples": [
+            "We are going to visit my parents this weekend."
+        ]
+    },
+    {
+        "word": "be sick",
+        "phonetic": "",
+        "pos": "",
+        "translation": "phr. 噁心；嘔吐",
+        "roots": "Word formation:\nbe + sick → 處於生病／噁心狀態\n\nCommon collocations:\nfeel sick → 感到噁心\nbe sick and tired of → 厭倦……",
+        "examples": [
+            "He felt so sick that he stayed in bed."
+        ]
+    },
+    {
+        "word": "beach",
+        "phonetic": "/biːtʃ/",
+        "pos": "",
+        "translation": "n. 海灘；海濱",
+        "roots": "Word formation:\n源自古英語 bæce「溪流；海灘」\n\nCommon collocations:\nbeach erosion → 海灘侵蝕\nsandy beach → 沙灘\nbeach resort → 海濱度假地",
+        "examples": [
+            "We spent the afternoon on the beach."
+        ]
+    },
+    {
+        "word": "beak",
+        "phonetic": "/biːk/",
+        "pos": "",
+        "translation": "n. 鳥嘴；喙",
+        "roots": "Word formation:\n源自中古英語 bec「鳥嘴」\n\nCommon collocations:\nbird's beak → 鳥喙\nbeak shape → 喙形",
+        "examples": [
+            "The bird used its beak to crack the seed."
+        ]
+    },
+    {
+        "word": "bear",
+        "phonetic": "/beər/",
+        "pos": "",
+        "translation": "n. 熊\nv. 忍受；承擔；承受；生育；產生；帶有",
+        "roots": "Word formation:\n源自古英語 beran「攜帶；承受」→ 承擔\n\nCommon collocations:\nbear responsibility → 承擔責任\nbear the cost → 承擔費用\nbear in mind → 記住；牢記",
+        "examples": [
+            "A brown bear walked near the campsite."
+        ]
+    },
+    {
+        "word": "beard",
+        "phonetic": "/bɪəd/",
+        "pos": "",
+        "translation": "n. 鬍鬚；鬍子",
+        "roots": "Word formation:\n源自古英語 beard → 鬍鬚\n\nCommon collocations:\ngrow a beard → 留鬍子\nbeard hair → 鬍鬚",
+        "examples": [
+            "My grandfather has a long white beard."
+        ]
+    },
+    {
+        "word": "beat",
+        "phonetic": "/biːt/",
+        "pos": "",
+        "translation": "n. 心跳聲；節拍\nv. 打；擊敗；敲打；跳動\na. 筋疲力盡的（口語）",
+        "roots": "Word formation:\n源自古英語 beatan「打；擊打」\n\nCommon collocations:\nbeat a record → 打破紀錄\nbeat the competition → 擊敗競爭對手\nheart beat → 心跳",
+        "examples": [
+            "Our team managed to beat the champions."
+        ]
+    },
+    {
+        "word": "beautiful",
+        "phonetic": "/ˈbjuː.tɪ.fəl/",
+        "pos": "",
+        "translation": "a. 美麗的；美好的",
+        "roots": "Word formation:\nbeauty + -ful（充滿……的）\n\nCommon collocations:\nbeautiful scenery → 美麗景色\nbeautiful landscape → 美麗景觀\nbeautifully designed → 設計精美的",
+        "examples": [
+            "The garden looked beautiful in spring."
+        ]
+    },
+    {
+        "word": "beautifully",
+        "phonetic": "/ˈbjuː.tɪ.fəl.i/",
+        "pos": "",
+        "translation": "adv. 優美地；出色地",
+        "roots": "Word formation:\nbeautiful + -ly（副詞後綴）\n\nCommon collocations:\nbeautifully designed → 設計精美地\nbeautifully illustrated → 插圖精美地",
+        "examples": [
+            "She sang beautifully at the concert."
+        ]
+    },
+    {
+        "word": "beauty",
+        "phonetic": "/ˈbjuː.ti/",
+        "pos": "",
+        "translation": "n. 美；美麗；美人；美好事物",
+        "roots": "Word formation:\n源自古法語 beauté → 美\n\nCommon collocations:\nnatural beauty → 自然美\nbeauty of nature → 大自然之美\nbeauty industry → 美容產業",
+        "examples": [
+            "The painting captures the beauty of the mountains."
+        ]
+    },
+    {
+        "word": "because",
+        "phonetic": "/bɪˈkɒz/",
+        "pos": "",
+        "translation": "conj. 因為；由於",
+        "roots": "Word formation:\nby cause → 因為某原因 → because\n\nCommon collocations:\nbecause of → 因為；由於\nbecause of this → 因此；由於這一點",
+        "examples": [
+            "I stayed home because I was ill."
+        ]
+    }
+];
+
+    const EBBINGHAUS_INTERVALS = [
+        0,                        
+        12 * 60 * 60 * 1000,      // 12小時
+        24 * 60 * 60 * 1000,      // 1天
+        2 * 24 * 60 * 60 * 1000,  // 2天
+        4 * 24 * 60 * 60 * 1000,  // 4天
+        7 * 24 * 60 * 60 * 1000,  // 7天
+        15 * 24 * 60 * 60 * 1000, // 15天
+        30 * 24 * 60 * 60 * 1000  // 30天
+    ];
+
+    let audioCtx = null;
+    function getAudioCtx() {
+        if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        return audioCtx;
+    }
+
+    // 修復 iPhone 休眠/鎖屏後音頻消失的問題 (全域觸控解鎖機制)
+    function unlockAudio() {
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+    document.addEventListener('touchstart', unlockAudio, { passive: true });
+    document.addEventListener('click', unlockAudio, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    });
+
+    function playCorrectFx() {
+        try {
+            const ctx = getAudioCtx();
+            if (ctx.state === 'suspended') ctx.resume();
+            const now = ctx.currentTime;
+
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(659.25, now);
+            gain1.gain.setValueAtTime(0.08, now);
+            gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 0.6);
+
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(880.00, now + 0.08);
+            gain2.gain.setValueAtTime(0.12, now + 0.08);
+            gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 0.08);
+            osc2.stop(now + 0.8);
+        } catch(e) {}
+    }
+
+    function playWrongFx() {
+        try {
+            const ctx = getAudioCtx();
+            if (ctx.state === 'suspended') ctx.resume();
+            const now = ctx.currentTime;
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(174.61, now); 
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.5);
+        } catch(e) {}
+    }
+
+    // 「白金漢宮」式按鍵音效：典雅剔透、音量剋制的雙音琴音，端莊而不喧嘩
+    function playTileClickSound() {
+        try {
+            const ctx = getAudioCtx();
+            if (ctx.state === 'suspended') ctx.resume();
+            const now = ctx.currentTime;
+            const notes = [1567.98, 2093.00]; // G6 → C7，高雅泛音組合
+            notes.forEach((f, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                const t = now + i * 0.018;
+                osc.frequency.setValueAtTime(f, t);
+                gain.gain.setValueAtTime(0.032, t);
+                gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(t);
+                osc.stop(t + 0.14);
+            });
+        } catch(e) {}
+    }
+
+    /* ============ 語音系統：OED 真人音源不提供可嵌入之公開介面，
+       故採「系統候選語音（洗牌抽取，保證每輪不重複）→ 有道詞典英式發音」二級降級鏈。
+       候選池含 Daniel／Serena／Stephanie／Ava 四個精確名稱之系統語音；
+       實際會用到哪幾個，取決於當前裝置／瀏覽器偵測到哪些（例如 Mac 上通常只有
+       Daniel＋Serena，iPhone 視使用者下載的語音包而定，可能是 Daniel＋Stephanie＋Ava）。
+       抽取規則：把「這台裝置目前偵測到的候選語音」洗牌成一個隊列，依序抽出；
+       抽完一輪（即用滿全部候選語音各一次）才重新洗牌，避免連續多次抽到同一個聲音，
+       也避免固定死板的順序輪迴。若裝置上一個候選語音都未偵測到，
+       一律直接改用有道詞典發音。 ============ */
+    const AUDIO_REPEAT_TIMES = 6; // 每次切換單字自動連續播放次數
+    const AUDIO_RATE = 0.8;       // 播放語速
+    const VOICE_CANDIDATES = [
+        { pattern: /daniel/i,    label: 'Daniel（英式男聲）' },
+        { pattern: /stephanie/i, label: 'Stephanie（美式女聲）' },
+        { pattern: /allison/i,   label: 'Allison（美式女聲）' }
+    ];
+
+    let activeAudio = null;
+    let isAudioPlayingLoop = false;
+    let audioLoopCount = 0;
+    let cachedVoices = [];
+    let lastVoiceUsed = null; // 記錄「這一次」實際播放所用的語音，供即時顯示
+    let voiceBag = [];        // 本輪尚未抽過的候選語音隊列，抽空後才重新洗牌
+
+    function refreshVoiceCache() {
+        if ('speechSynthesis' in window) {
+            cachedVoices = window.speechSynthesis.getVoices() || [];
+        }
+    }
+    if ('speechSynthesis' in window) {
+        refreshVoiceCache();
+        // Chrome 常需等 voiceschanged 事件才拿得到完整清單（Safari 通常同步就有），
+        // 這裡持續監聽，確保 Chrome 上 Daniel／Serena 不會因為「問太早」而被誤判成不存在。
+        window.speechSynthesis.onvoiceschanged = refreshVoiceCache;
+    }
+
+    function shuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    // 回傳「這台裝置目前實際偵測到」的候選語音（SpeechSynthesisVoice 物件陣列）
+    function getAvailableCandidateVoices() {
+        if (cachedVoices.length === 0) refreshVoiceCache();
+        const found = [];
+        VOICE_CANDIDATES.forEach(c => {
+            const v = cachedVoices.find(v => c.pattern.test(v.name));
+            if (v) found.push(v);
+        });
+        return found;
+    }
+
+    // 每次播放都從「本輪尚未抽過」的候選語音隊列中抽一個；隊列抽空後（代表全部候選
+    // 語音都已各用過一次）才重新洗牌開始下一輪。裝置上只有 1 個候選語音時等同固定使用；
+    // 有 2 個時等同交替；有 3～4 個時保證每輪都不重複、且輪與輪之間的順序不固定。
+    function getPreferredVoice() {
+        if (!('speechSynthesis' in window)) return null;
+        const available = getAvailableCandidateVoices();
+        if (available.length === 0) {
+            lastVoiceUsed = null;
+            updateLiveVoiceNote(null);
+            return null;
+        }
+        if (voiceBag.length === 0) {
+            voiceBag = shuffle(available);
+        }
+        const chosen = voiceBag.shift();
+        lastVoiceUsed = chosen;
+        updateLiveVoiceNote(chosen);
+        return chosen;
+    }
+
+    function labelForVoice(voice) {
+        const match = VOICE_CANDIDATES.find(c => c.pattern.test(voice.name));
+        return match ? match.label : voice.name;
+    }
+
+    // 每次實際播放時，即時更新畫面上的語音來源說明，讓使用者能確實看到「這一次」用的是誰
+    function updateLiveVoiceNote(chosen) {
+        const note = document.getElementById('audioSourceNote');
+        if (!note) return;
+        if (chosen) {
+            note.innerText = `🔊 本次播放使用：系統內建「${chosen.name}」・${labelForVoice(chosen)}`;
+        } else {
+            note.innerText = `🔊 本次播放使用：有道詞典英式發音（系統未偵測到任何候選語音）`;
+        }
+    }
+
+    function detectAudioSource() {
+        const note = document.getElementById('audioSourceNote');
+        if (!note) return;
+        setTimeout(() => {
+            const available = getAvailableCandidateVoices();
+            if (available.length === 0) {
+                note.innerText = `🔊 語音來源：有道詞典英式發音（此裝置／瀏覽器未偵測到候選語音，非程式遺漏，屬環境限制）`;
+            } else {
+                const names = available.map(v => labelForVoice(v)).join('／');
+                note.innerText = `🔊 語音來源：偵測到 ${available.length} 個系統語音（${names}），每輪洗牌抽取、輪內不重複，每次播放將即時顯示實際使用者`;
+            }
+        }, 350);
+    }
+
+    function stopAudioLoop() {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        if (activeAudio) {
+            activeAudio.pause();
+            activeAudio.currentTime = 0;
+            activeAudio = null;
+        }
+        isAudioPlayingLoop = false;
+        audioLoopCount = 0;
+        updateSoundBtnState(false);
+    }
+
+    function playAudioContinuous(word, times = AUDIO_REPEAT_TIMES) {
+        stopAudioLoop();
+        if (!word) return;
+        isAudioPlayingLoop = true;
+        audioLoopCount = 0;
+        updateSoundBtnState(true);
+
+        const voice = getPreferredVoice();
+
+        function playOne() {
+            if (!isAudioPlayingLoop || audioLoopCount >= times) {
+                stopAudioLoop();
+                return;
+            }
+            if (voice) {
+                // 第一順位：macOS 系統 Daniel／Serena 真人語音
+                const utter = new SpeechSynthesisUtterance(word);
+                utter.voice = voice;
+                utter.lang = voice.lang || 'en-GB';
+                utter.rate = AUDIO_RATE;
+                utter.onend = () => {
+                    audioLoopCount++;
+                    if (isAudioPlayingLoop && audioLoopCount < times) {
+                        setTimeout(playOne, 350);
+                    } else {
+                        stopAudioLoop();
+                    }
+                };
+                utter.onerror = () => stopAudioLoop();
+                window.speechSynthesis.speak(utter);
+            } else {
+                // 降級方案：有道詞典英式發音
+                activeAudio = new Audio(`https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=1`);
+                activeAudio.onended = () => {
+                    audioLoopCount++;
+                    if (isAudioPlayingLoop && audioLoopCount < times) {
+                        setTimeout(playOne, 400);
+                    } else {
+                        stopAudioLoop();
+                    }
+                };
+                activeAudio.play().catch(() => stopAudioLoop());
+            }
+        }
+        playOne();
+    }
+
+    function toggleAudio(word) {
+        if (isAudioPlayingLoop) stopAudioLoop();
+        else playAudioContinuous(word);
+    }
+
+    function updateSoundBtnState(isPlaying) {
+        const btn = document.getElementById('soundBtn');
+        if (btn) {
+            if (isPlaying) {
+                btn.classList.add('playing');
+                btn.innerHTML = `🔊 連續朗讀中... (點擊停止)`;
+            } else {
+                btn.innerHTML = `🔊 播放標準發音 (連續${AUDIO_REPEAT_TIMES}次)`;
+            }
+        }
+    }
+
+    let allWords = [];
+    let currentUnitWords = [];
+    let playQueue = [];
+    let currentRoundMistakes = []; // 新增：淘汰制錯題池
+    let unitSize = 50;
+    let currentUnitIndex = 0;
+    let currentQuestionIndex = 0;
+    let isShuffle = false;
+    let isCleanTrans = true;
+    let isReverseMode = false;
+    let currentMode = 'quiz';
+    let currentQuestion = null;
+    
+    let streakCount = 0;
+    let unitPracticedCount = 0;
+    let mistakeDict = {};
+
+    function saveState() {
+        const state = {
+            unitIdx: currentUnitIndex,
+            qIdx: currentQuestionIndex,
+            mode: currentMode,
+            mistakeDict: mistakeDict,
+            isShuffle, isReverseMode, isCleanTrans,
+            streak: streakCount,
+            totalPracticed: unitPracticedCount
+        };
+        localStorage.setItem('oed_app_state', JSON.stringify(state));
+    }
+
+    function loadState() {
+        const saved = localStorage.getItem('oed_app_state');
+        if (!saved) return;
+        try {
+            const s = JSON.parse(saved);
+            currentUnitIndex = s.unitIdx !== undefined ? s.unitIdx : 0;
+            currentQuestionIndex = s.qIdx !== undefined ? s.qIdx : 0;
+            currentMode = s.mode || 'quiz';
+
+            mistakeDict = s.mistakeDict || {};
+
+            isShuffle = !!s.isShuffle;
+            isReverseMode = !!s.isReverseMode;
+            isCleanTrans = s.isCleanTrans !== undefined ? s.isCleanTrans : true;
+            streakCount = s.streak || 0;
+            unitPracticedCount = s.totalPracticed || 0;
+
+            document.getElementById('shuffleCheck').checked = isShuffle;
+            document.getElementById('reverseCheck').checked = isReverseMode;
+            document.getElementById('cleanTransCheck').checked = isCleanTrans;
+            
+            document.getElementById('btnModeQuiz').classList.toggle('active', currentMode === 'quiz');
+            document.getElementById('btnModeCard').classList.toggle('active', currentMode === 'card');
+            document.getElementById('btnModeMatch').classList.toggle('active', currentMode === 'match');
+        } catch(e) {}
+    }
+
+    // ============ 學習進度備份／還原（防範 file:// 本機開啟時
+    //   Safari／Chrome 對 localStorage 的不穩定清空，讓使用者可自行手動存一份 JSON 在旁） ============
+    function exportProgress() {
+        const saved = localStorage.getItem('oed_app_state');
+        const state = saved ? JSON.parse(saved) : {};
+        const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const ts = new Date().toISOString().slice(0, 10);
+        a.href = url;
+        a.download = `oed_progress_backup_${ts}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function importProgress(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const state = JSON.parse(e.target.result);
+                localStorage.setItem('oed_app_state', JSON.stringify(state));
+                loadState();
+                updateStats();
+                alert('✅ 學習進度已還原！');
+            } catch (err) {
+                alert('❌ 這份備份檔案格式有誤，還原失敗：' + err.message);
+            }
+        };
+        reader.readAsText(file, 'utf-8');
+        event.target.value = '';
+    }
+
+    // ============ 詞庫載入機制 ============
+    // 支援兩種資料來源，任一成功即可：
+    // 1. 自動抓取同目錄下的 words.json（部署到 GitHub Pages／任何網頁伺服器時最方便，
+    //    以後只要把新的詞彙 JSON 命名為 words.json 覆蓋上去即可，不必碰這份 html）
+    // 2. 若抓取失敗（例如用瀏覽器直接打開本機檔案，file:// 協議下 fetch 本機檔案會被瀏覽器擋下），
+    //    自動顯示「選擇檔案」介面，讓使用者手動挑一份 JSON，兩種方式效果完全一樣
+    // 接受的 JSON 格式：[{word, phonetic, pos, translation, roots}, ...] 這樣的陣列，
+    // 也相容 {"words":[...]}／{"WORDS":[...]}／{"data":[...]} 這種外層包一層的寫法。
+    // 不論放多少詞，都會依 unitSize（目前為 50）自動切成一個個單元，無需另外設定。
+    function normalizeWordsPayload(raw) {
+        if (Array.isArray(raw)) return raw;
+        if (raw && Array.isArray(raw.words)) return raw.words;
+        if (raw && Array.isArray(raw.WORDS)) return raw.WORDS;
+        if (raw && Array.isArray(raw.data)) return raw.data;
+        return null;
+    }
+
+    function applyLoadedWords(raw, sourceLabel, keepProgress) {
+        const list = normalizeWordsPayload(raw);
+        if (!list || list.length === 0) {
+            showDataLoaderPanel('❌ 這份 JSON 內容看起來不是有效的詞彙陣列，請確認格式（word / translation 等欄位）後再試一次。');
+            return false;
+        }
+        WORDS = list;
+        allWords = WORDS.filter(w => w && w.word && w.translation);
+        if (allWords.length === 0) {
+            showDataLoaderPanel('❌ 檔案讀取成功，但沒有找到任何含 word 與 translation 欄位的有效詞條。');
+            return false;
+        }
+        document.getElementById('dataLoaderPanel').style.display = 'none';
+        document.getElementById('heroSubtitle').innerText =
+            `${allWords.length} Core Vocabulary · Ebbinghausian rigour · 內建連連看配對${sourceLabel ? '（' + sourceLabel + '）' : ''}`;
+        // 修正：只有使用者「主動」載入一份新詞庫檔案時才歸零進度（換詞庫理當重新開始）。
+        // 自動載入內嵌／快取詞庫（每次開啟頁面都會跑一次）不可以清空剛剛從 loadState() 讀回來的進度，
+        // 否則每次重新整理頁面，學習進度都會被強制打回 1，之前就是這裡的 bug。
+        if (!keepProgress) {
+            currentUnitIndex = 0;
+            currentQuestionIndex = 0;
+        }
+        initAppUI();
+        return true;
+    }
+
+    function showDataLoaderPanel(errorMsg) {
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('dataLoaderPanel').style.display = 'block';
+        const errEl = document.getElementById('dataLoaderError');
+        if (errorMsg) {
+            errEl.innerText = errorMsg;
+            errEl.style.display = 'block';
+        } else {
+            errEl.style.display = 'none';
+        }
+    }
+
+    function handleWordsFileInput(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const raw = JSON.parse(e.target.result);
+                const ok = applyLoadedWords(raw, file.name);
+                if (ok) localStorage.setItem(LAST_FILE_KEY, file.name);
+            } catch (err) {
+                showDataLoaderPanel('❌ 檔案不是合法的 JSON，請檢查格式。錯誤訊息：' + err.message);
+            }
+        };
+        reader.onerror = () => showDataLoaderPanel('❌ 讀取檔案失敗，請重新選擇。');
+        reader.readAsText(file, 'utf-8');
+    }
+
+    // 依序嘗試以下幾種方式，任何一種成功就直接載入，不限定檔名必須叫 words.json：
+    // 1. 網址帶參數指定檔名，例如 index.html?data=myList.json → 直接抓這個檔案
+    // 2. 上次在這個瀏覽器成功載入過的檔名（存在 localStorage，重新整理後自動記得）
+    // 3. 常見預設檔名 words.json（圖方便的慣例，非強制）
+    // 以上都失敗（例如檔名完全沒對上，或用本機 file:// 開啟導致 fetch 被擋），
+    // 就顯示檔案選擇器，選擇器本身可以選「任何檔名」的 json，不受限制；
+    // 也支援把 json 檔直接拖進頁面。
+    const LAST_FILE_KEY = 'oed_last_words_filename';
+
+    function getUrlDataParam() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('data') || params.get('json') || params.get('words');
+    }
+
+    async function tryFetchJson(filename) {
+        try {
+            const res = await fetch(filename, { cache: 'no-store' });
+            if (!res.ok) return null;
+            const raw = await res.json();
+            return raw;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    async function tryAutoLoadWords() {
+        // 0. 最優先：詞庫已直接內嵌在這份 HTML 檔案裡（EMBEDDED_WORDS_DATA），
+        //    完全不必抓取任何外部檔案，file:// 桌面雙擊打開也 100% 秒開，
+        //    徹底避開「本機檔案下 fetch 被瀏覽器擋下、每次都要手動選檔」的問題。
+        if (typeof EMBEDDED_WORDS_DATA !== 'undefined' && EMBEDDED_WORDS_DATA && EMBEDDED_WORDS_DATA.length) {
+            const ok = applyLoadedWords(EMBEDDED_WORDS_DATA, '內嵌詞庫（無需上傳）', true);
+            if (ok) return;
+        }
+
+        const candidates = [];
+        const urlParam = getUrlDataParam();
+        if (urlParam) candidates.push(urlParam);
+        const lastFile = localStorage.getItem(LAST_FILE_KEY);
+        if (lastFile && !candidates.includes(lastFile)) candidates.push(lastFile);
+        if (!candidates.includes('words.json')) candidates.push('words.json');
+
+        for (const name of candidates) {
+            const raw = await tryFetchJson(name);
+            if (raw) {
+                const ok = applyLoadedWords(raw, name, true);
+                if (ok) {
+                    localStorage.setItem(LAST_FILE_KEY, name);
+                    return;
+                }
+            }
+        }
+        // 全部候選檔名都沒抓到，顯示檔案選擇器讓使用者手動指定（任何檔名皆可）
+        showDataLoaderPanel();
+    }
+
+    // 支援把 json 檔直接拖曳到頁面上任何地方來載入，跟點擊選擇器效果一樣
+    window.addEventListener('dragover', (e) => e.preventDefault());
+    window.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const raw = JSON.parse(ev.target.result);
+                const ok = applyLoadedWords(raw, file.name);
+                if (ok) localStorage.setItem(LAST_FILE_KEY, file.name);
+            } catch (err) {
+                showDataLoaderPanel('❌ 拖入的檔案不是合法的 JSON，請檢查格式。錯誤訊息：' + err.message);
+            }
+        };
+        reader.readAsText(file, 'utf-8');
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        getAudioCtx(); // 初始化
+        loadState();
+        tryAutoLoadWords();
+        detectAudioSource();
+    });
+
+    function getCleanTranslation(text) {
+        if (!text) return '';
+        if (!isCleanTrans) return text;
+        let parts = text.split(/；|;|\n/);
+        let trimmed = parts.slice(0, 2).join('；');
+        return trimmed.length > 24 ? trimmed.substring(0, 24) + '...' : trimmed;
+    }
+
+    function initAppUI() {
+        if (allWords.length === 0) return;
+        document.getElementById('mainApp').style.display = 'block';
+
+        const select = document.getElementById('unitSelect');
+        select.innerHTML = '';
+        
+        const totalUnits = Math.ceil(allWords.length / unitSize);
+        for (let i = 0; i < totalUnits; i++) {
+            const start = i * unitSize + 1;
+            const end = Math.min((i + 1) * unitSize, allWords.length);
+            select.add(new Option(`Unit ${i + 1} (${start}-${end})`, i));
+        }
+
+        select.add(new Option(`🔥 全詞庫隨機特訓 (${allWords.length} 詞)`, -1));
+
+        const mistakeOpt = new Option(`💔 生詞簿`, -2);
+        mistakeOpt.id = 'mistakeOptionText';
+        select.add(mistakeOpt);
+
+        if (currentUnitIndex >= totalUnits && currentUnitIndex !== -1 && currentUnitIndex !== -2) {
+            currentUnitIndex = 0;
+        }
+        select.value = currentUnitIndex;
+        loadUnit(currentUnitIndex);
+    }
+
+    function startMistakeBook() {
+        let now = Date.now();
+        let allMistakes = Object.values(mistakeDict);
+        let dueMistakes = allMistakes.filter(m => m.nextReview <= now);
+
+        if (allMistakes.length === 0) {
+            alert("👏 目前尚無生詞，請繼續保持。");
+            return;
+        }
+        if (dueMistakes.length === 0) {
+            alert(`🎉 今日複習任務已完成！\n（尚有 ${allMistakes.length} 個詞彙於記憶週期中，明日請繼續。）`);
+            return;
+        }
+        document.getElementById('unitSelect').value = -2;
+        onUnitChange();
+    }
+
+    /* ============ 生詞簿管理（手動刪除誤加入的詞）============ */
+    function openMistakeManager() {
+        renderMistakeManagerList();
+        document.getElementById('mistakeManagerOverlay').style.display = 'flex';
+    }
+
+    function closeMistakeManager() {
+        document.getElementById('mistakeManagerOverlay').style.display = 'none';
+    }
+
+    function renderMistakeManagerList() {
+        const list = document.getElementById('mistakeManagerList');
+        const entries = Object.values(mistakeDict).sort((a, b) => a.nextReview - b.nextReview);
+
+        if (entries.length === 0) {
+            list.innerHTML = `<div class="empty-state" style="padding:30px 10px;">🌿 生詞簿目前是空的</div>`;
+            return;
+        }
+
+        list.innerHTML = entries.map(m => {
+            const levelText = m.level > 0 ? `已連對 ${m.level} 輪` : '尚未通過複習';
+            return `
+                <div class="mistake-row">
+                    <div>
+                        <div class="mistake-word">${escapeHtml(m.wordObj.word)}</div>
+                        <div class="mistake-trans">${escapeHtml(getCleanTranslation(m.wordObj.translation))}</div>
+                        <div class="mistake-level">${levelText}</div>
+                    </div>
+                    <button class="mistake-del-btn" onclick="removeFromMistakeBook('${escapeJs(m.wordObj.word)}')" title="從生詞簿移除此詞">✕</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function removeFromMistakeBook(word) {
+        delete mistakeDict[word];
+        saveState();
+        updateStats();
+        renderMistakeManagerList();
+    }
+
+    function toggleSetting() {
+        isShuffle = document.getElementById('shuffleCheck').checked;
+        isReverseMode = document.getElementById('reverseCheck').checked;
+        isCleanTrans = document.getElementById('cleanTransCheck').checked;
+        resetUnitQueue();
+        if (currentMode === 'match') startMatch();
+        else nextQuestion();
+        saveState();
+    }
+
+    function onUnitChange() {
+        const val = parseInt(document.getElementById('unitSelect').value);
+        currentQuestionIndex = 0;
+        loadUnit(val);
+        saveState();
+    }
+
+    function loadUnit(unitIdx) {
+        currentUnitIndex = parseInt(unitIdx);
+        if (currentUnitIndex === -1) {
+            currentUnitWords = [...allWords];
+        } else if (currentUnitIndex === -2) {
+            let now = Date.now();
+            let allMistakes = Object.values(mistakeDict);
+            let dueMistakes = allMistakes.filter(m => m.nextReview <= now);
+
+            if (allMistakes.length === 0 || dueMistakes.length === 0) {
+                alert("無待複習生詞，已自動切換至 Unit 1。");
+                document.getElementById('unitSelect').value = 0;
+                currentUnitIndex = 0;
+                currentUnitWords = allWords.slice(0, unitSize);
+            } else {
+                currentUnitWords = dueMistakes.map(m => m.wordObj);
+            }
+        } else {
+            const start = currentUnitIndex * unitSize;
+            currentUnitWords = allWords.slice(start, start + unitSize);
+        }
+
+        resetUnitQueue();
+        updateStats();
+        if (currentMode === 'match') startMatch();
+        else nextQuestion();
+    }
+
+    function resetUnitQueue() {
+        if (isShuffle) {
+            playQueue = [...currentUnitWords].sort(() => Math.random() - 0.5);
+        } else {
+            playQueue = [...currentUnitWords];
+        }
+        currentRoundMistakes = []; // 每次重置單元時清空錯題池
+        if (currentQuestionIndex >= playQueue.length) currentQuestionIndex = 0;
+    }
+
+    function switchMode(mode) {
+        currentMode = mode;
+        stopAudioLoop();
+        document.getElementById('btnModeQuiz').classList.toggle('active', mode === 'quiz');
+        document.getElementById('btnModeCard').classList.toggle('active', mode === 'card');
+        document.getElementById('btnModeMatch').classList.toggle('active', mode === 'match');
+        if (mode === 'match') startMatch();
+        else nextQuestion();
+        saveState();
+    }
+
+    function nextQuestion() {
+        stopAudioLoop();
+        if (playQueue.length === 0) return;
+
+        let wordObj = playQueue[currentQuestionIndex % playQueue.length];
+        let distractors = [];
+        while (distractors.length < 3) {
+            let rand = allWords[Math.floor(Math.random() * allWords.length)];
+            if (rand.word !== wordObj.word && !distractors.some(d => d.word === rand.word)) {
+                distractors.push(rand);
+            }
+        }
+
+        let rawOptions = [wordObj, ...distractors].sort(() => Math.random() - 0.5);
+        currentQuestion = {
+            wordObj: wordObj,
+            options: rawOptions,
+            correctIndex: rawOptions.findIndex(o => o.word === wordObj.word)
+        };
+
+        if (currentMode === 'quiz') renderQuizMode();
+        else renderCardMode();
+
+        playAudioContinuous(wordObj.word);
+        saveState();
+    }
+
+    function renderQuizMode() {
+        const area = document.getElementById('cardArea');
+        const q = currentQuestion;
+        const optionLetters = ['A', 'B', 'C', 'D'];
+
+        let html = '';
+        if (!isReverseMode) {
+            html += `<div class="word-display">${escapeHtml(q.wordObj.word)}</div>
+                     <div class="phonetic">${escapeHtml(q.wordObj.phonetic || '')}</div>`;
+        } else {
+            html += `<div style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">請選擇對應之英文單詞：</div>
+                     <div class="trans-display">${escapeHtml(getCleanTranslation(q.wordObj.translation))}</div>`;
+        }
+        
+        html += `<button class="sound-btn" id="soundBtn" onclick="toggleAudio('${escapeJs(q.wordObj.word)}')">🔊 播放標準發音 (連續${AUDIO_REPEAT_TIMES}次)</button>
+                 <div class="options-grid">`;
+
+        q.options.forEach((opt, idx) => {
+            if (!isReverseMode) {
+                html += `<button class="option-btn" id="optBtn_${idx}" onclick="checkAnswer(${idx})">
+                            <strong style="color:var(--oed-blue-accent); font-family:'EB Garamond',serif; margin-right:6px;">${optionLetters[idx]}.</strong> ${escapeHtml(getCleanTranslation(opt.translation))}
+                         </button>`;
+            } else {
+                html += `<button class="option-btn" id="optBtn_${idx}" onclick="checkAnswer(${idx})">
+                            <strong style="color:var(--oed-blue-accent); font-family:'EB Garamond',serif; margin-right:6px;">${optionLetters[idx]}.</strong> 
+                            <span style="font-family:'EB Garamond',serif; font-size:20px; color:#ffffff;">${escapeHtml(opt.word)}</span>
+                            <span style="color:var(--text-muted); font-size:13px; margin-left:10px;">${escapeHtml(opt.phonetic || '')}</span>
+                         </button>`;
+            }
+        });
+
+        html += `</div>
+                 <div class="feedback-banner" id="feedbackBanner"></div>
+                 <div id="nextArea" style="display:none;">
+                     <button class="next-btn" onclick="onNextClick()">下一題 ➔</button>
+                 </div>`;
+        
+        area.innerHTML = html;
+        updateProgressText();
+    }
+
+    function handleEbbinghausResult(wordObj, isCorrect) {
+        if (isCorrect) {
+            streakCount++;
+            if (mistakeDict[wordObj.word]) {
+                mistakeDict[wordObj.word].level++;
+                let newLevel = mistakeDict[wordObj.word].level;
+                
+                if (newLevel >= EBBINGHAUS_INTERVALS.length) {
+                    delete mistakeDict[wordObj.word];
+                } else {
+                    mistakeDict[wordObj.word].nextReview = Date.now() + EBBINGHAUS_INTERVALS[newLevel];
+                }
+            }
+        } else {
+            streakCount = 0;
+            // 加入錯題池，以供本輪結尾重新提問 (淘汰制)
+            if (!currentRoundMistakes.some(w => w.word === wordObj.word)) {
+                currentRoundMistakes.push(wordObj);
+            }
+
+            if (mistakeDict[wordObj.word]) {
+                mistakeDict[wordObj.word].level = 0;
+                mistakeDict[wordObj.word].nextReview = Date.now();
+            } else {
+                mistakeDict[wordObj.word] = {
+                    wordObj: wordObj,
+                    level: 0,
+                    nextReview: Date.now()
+                };
+            }
+        }
+    }
+
+    // 把單一多行字串依「每一行」拆開，逐行輸出成獨立的 <div>，
+    // 確保換行在畫面上真的是換行（而不是被 HTML 吃掉、擠成一長串）。
+    function linesToHtml(text) {
+        return text.split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0)
+            .map(line => `<div>${escapeHtml(line)}</div>`)
+            .join('');
+    }
+
+    function renderRootsBlock(wordObj) {
+        if (!wordObj || !wordObj.roots) return '';
+
+        // 把 roots 欄位拆成「詞根詞源」與「Common collocations」兩段
+        const marker = 'Common collocations:';
+        const idx = wordObj.roots.indexOf(marker);
+        let wordFormationText, collocText;
+        if (idx === -1) {
+            wordFormationText = wordObj.roots;
+            collocText = '';
+        } else {
+            wordFormationText = wordObj.roots.slice(0, idx).trim();
+            collocText = wordObj.roots.slice(idx + marker.length).trim();
+        }
+        // 如果原始資料沒有「Word formation:」字樣，補上，維持顯示一致
+        if (wordFormationText && !wordFormationText.startsWith('Word formation:')) {
+            wordFormationText = 'Word formation: ' + wordFormationText;
+        }
+
+        let html = '<div class="roots-block">';
+
+        // 1. 例句（Oxford 3000 詞彙等級，原創撰寫，非逐字取自牛津辭典）
+        if (wordObj.examples && wordObj.examples.length > 0) {
+            html += `
+                <div class="detail-section example-section">
+                    <span class="detail-label">📘 例句</span>
+                    <span class="detail-text example-text">${linesToHtml(wordObj.examples.join('\n'))}</span>
+                </div>`;
+        }
+
+        // 2. Common collocations
+        if (collocText) {
+            html += `
+                <div class="detail-section colloc-section">
+                    <span class="detail-label">🔗 Common collocations</span>
+                    <span class="detail-text">${linesToHtml(collocText)}</span>
+                </div>`;
+        }
+
+        // 3. Word formation / 詞根詞源
+        if (wordFormationText) {
+            html += `
+                <div class="detail-section wordform-section">
+                    <span class="detail-label">🌱 Word formation</span>
+                    <span class="detail-text">${linesToHtml(wordFormationText)}</span>
+                </div>`;
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    function checkAnswer(selectedIdx) {
+        stopAudioLoop();
+        const q = currentQuestion;
+        const banner = document.getElementById('feedbackBanner');
+        const nextArea = document.getElementById('nextArea');
+
+        q.options.forEach((_, idx) => document.getElementById(`optBtn_${idx}`).disabled = true);
+        unitPracticedCount++;
+        
+        if (selectedIdx === q.correctIndex) {
+            playCorrectFx(); 
+            document.getElementById(`optBtn_${q.correctIndex}`).classList.add('correct');
+            handleEbbinghausResult(q.wordObj, true);
+
+            banner.className = 'feedback-banner correct-bg';
+            banner.style.display = 'block';
+            banner.innerHTML = `
+                <div style="font-weight:600; margin-bottom:2px;">✅ 回答正確</div>
+                ${renderRootsBlock(q.wordObj)}
+            `;
+        } else {
+            playWrongFx(); 
+            document.getElementById(`optBtn_${selectedIdx}`).classList.add('wrong');
+            document.getElementById(`optBtn_${q.correctIndex}`).classList.add('correct');
+
+            handleEbbinghausResult(q.wordObj, false);
+
+            banner.className = 'feedback-banner wrong-bg';
+            banner.style.display = 'block';
+            banner.innerHTML = `
+                <div style="font-weight:600; margin-bottom:2px;">❌ 回答錯誤</div>
+                ${renderRootsBlock(q.wordObj)}
+            `;
+        }
+
+        updateStats();
+        nextArea.style.display = 'block';
+        saveState();
+    }
+
+    function showCelebration() {
+        // 華麗撒花特效
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#d4af37', '#38bdf8', '#ffffff']
+        });
+        
+        document.getElementById('cardArea').innerHTML = `
+            <div style="padding: 40px 10px; text-align: center; animation: fadeIn 0.5s;">
+                <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>
+                <h2 style="color: var(--oed-gold); font-family: 'EB Garamond', serif; font-size: 32px; margin-bottom: 16px;">Unit Mastered!</h2>
+                <p style="color: #4ade80; font-size: 15px; line-height: 1.6; margin-bottom: 30px;">
+                    太棒了！本階段的詞彙已全數通關！<br>
+                    沒有任何遺漏的生詞了。
+                </p>
+                <button class="next-btn" style="background: rgba(56, 189, 248, 0.1); border-color: var(--oed-blue-accent); color: var(--oed-blue-accent);" onclick="onUnitChange()">
+                    🔄 再次研習本單元
+                </button>
+                <button class="next-btn" style="margin-top: 12px; background: #ffffff; color: #020d1d;" onclick="goToNextUnit()">
+                    ➡️ 前往下一單元
+                </button>
+            </div>
+        `;
+    }
+
+    function goToNextUnit() {
+        const select = document.getElementById('unitSelect');
+        let nextVal = parseInt(select.value) + 1;
+        // 如果到了最後一課（減2是因為有隨機和生詞本選項）
+        if (nextVal >= select.options.length - 2) { 
+            nextVal = 0; // 回到第一課
+        }
+        select.value = nextVal;
+        onUnitChange();
+    }
+
+    function onNextClick() {
+        currentQuestionIndex++;
+        // 檢查是否已完成當前隊列
+        if (currentQuestionIndex >= playQueue.length) {
+            // 如果生詞簿研習模式結束
+            if (currentUnitIndex === -2) {
+                loadUnit(-2);
+                return;
+            } else {
+                // 一般單元模式：檢查錯題池
+                if (currentRoundMistakes.length > 0) {
+                    // 有錯題！進入錯題循環模式
+                    playQueue = [...currentRoundMistakes];
+                    if (isShuffle) playQueue.sort(() => Math.random() - 0.5);
+                    currentRoundMistakes = []; // 清空準備迎接下一輪可能再錯的
+                    currentQuestionIndex = 0;
+                } else {
+                    // 完美通關，進入撒花畫面！
+                    showCelebration();
+                    return;
+                }
+            }
+        }
+        nextQuestion();
+    }
+
+    function renderCardMode() {
+        const area = document.getElementById('cardArea');
+        const q = currentQuestion;
+        let html = `<div class="flashcard" id="frontCard" onclick="flipCard()">`;
+        
+        if (!isReverseMode) {
+            html += `<div class="word-display">${escapeHtml(q.wordObj.word)}</div>
+                     <div class="phonetic">${escapeHtml(q.wordObj.phonetic || '')}</div>
+                     <button class="sound-btn" id="soundBtn" onclick="event.stopPropagation(); toggleAudio('${escapeJs(q.wordObj.word)}')">🔊 播放發音</button>
+                     <div class="trans-hidden" id="cardTrans">點擊卡片翻面，檢視釋義</div>`;
+        } else {
+            html += `<div style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">請回想對應之英文單詞：</div>
+                     <div class="trans-display">${escapeHtml(getCleanTranslation(q.wordObj.translation))}</div>
+                     <button class="sound-btn" id="soundBtn" onclick="event.stopPropagation(); toggleAudio('${escapeJs(q.wordObj.word)}')">🔊 播放發音</button>
+                     <div class="trans-hidden" id="cardTrans">點擊卡片翻面，檢視單詞</div>`;
+        }
+
+        html += `</div>
+                 <div id="cardRootsBlock"></div>
+                 <div class="action-btns" id="cardActions" style="display:none;">
+                     <button class="action-btn btn-fail" onclick="markCard(false)">❌ 尚未掌握</button>
+                     <button class="action-btn btn-pass" onclick="markCard(true)">✅ 完整記憶</button>
+                 </div>`;
+        
+        area.innerHTML = html;
+        updateProgressText();
+        playAudioContinuous(q.wordObj.word);
+    }
+
+    function flipCard() {
+        const transEl = document.getElementById('cardTrans');
+        const q = currentQuestion;
+        
+        if (!isReverseMode) {
+            transEl.className = 'trans';
+            transEl.style.fontSize = '20px';
+            transEl.style.color = '#ffffff';
+            transEl.style.fontFamily = '"EB Garamond", serif';
+            transEl.innerText = getCleanTranslation(q.wordObj.translation);
+        } else {
+            transEl.className = 'trans';
+            transEl.style.fontSize = '26px';
+            transEl.style.color = '#ffffff';
+            transEl.style.fontFamily = '"EB Garamond", serif';
+            transEl.innerHTML = `${escapeHtml(q.wordObj.word)} <span style="font-size:15px; color:var(--oed-blue-accent); font-family:sans-serif;">${escapeHtml(q.wordObj.phonetic || '')}</span>`;
+        }
+        
+        document.getElementById('cardActions').style.display = 'flex';
+        document.getElementById('frontCard').onclick = null; 
+
+        const rootsEl = document.getElementById('cardRootsBlock');
+        if (rootsEl) rootsEl.innerHTML = renderRootsBlock(q.wordObj);
+    }
+
+    function markCard(isRemembered) {
+        stopAudioLoop();
+        unitPracticedCount++;
+        const q = currentQuestion;
+
+        if (isRemembered) {
+            playCorrectFx();
+            handleEbbinghausResult(q.wordObj, true);
+        } else {
+            playWrongFx();
+            handleEbbinghausResult(q.wordObj, false);
+        }
+
+        updateStats();
+        saveState();
+        onNextClick();
+    }
+
+    /* ============ 連連看配對模式 ============ */
+    let matchWords = [];
+    let matchLeft = [];
+    let matchRight = [];
+    let matchSelectedLeft = null;
+    let matchSelectedRight = null;
+    let matchMatchedCount = 0;
+    let matchDirection = 'EN2CN';
+    let matchedSet = new Set();
+    let matchWrongPair = { left: null, right: null };
+
+    function shuffleArr(arr) {
+        return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    function startMatch() {
+        stopAudioLoop();
+        let pool = currentUnitWords.length > 0 ? currentUnitWords : allWords;
+        if (pool.length < 4) {
+            alert('這個範圍詞彙太少，無法配對（至少需要 4 個詞）。');
+            return;
+        }
+        matchWords = shuffleArr(pool).slice(0, Math.min(8, pool.length));
+        matchLeft = shuffleArr(matchWords.map(w => ({ word: w.word })));
+        matchRight = shuffleArr(matchWords.map(w => ({ word: w.word })));
+        matchSelectedLeft = null;
+        matchSelectedRight = null;
+        matchMatchedCount = 0;
+        matchedSet = new Set();
+        matchWrongPair = { left: null, right: null };
+        renderMatch();
+    }
+
+    function toggleMatchDirection() {
+        matchDirection = matchDirection === 'EN2CN' ? 'CN2EN' : 'EN2CN';
+        startMatch();
+    }
+
+    function labelForMatch(word, side) {
+        const w = allWords.find(x => x.word === word);
+        if (!w) return word;
+        const showEnglish = (matchDirection === 'EN2CN' && side === 'left') || (matchDirection === 'CN2EN' && side === 'right');
+        return showEnglish ? w.word : getCleanTranslation(w.translation);
+    }
+
+    function renderMatch() {
+        const area = document.getElementById('cardArea');
+        const dirLabel = matchDirection === 'EN2CN' ? '英 → 中' : '中 → 英';
+
+        let html = `
+            <div class="match-topbar">
+                <span style="font-size:13px; color:var(--text-muted);">配對進度：${matchMatchedCount} / ${matchWords.length} ・ 方向：${dirLabel}</span>
+                <button class="match-dir-btn" onclick="toggleMatchDirection()">🔄 切換方向</button>
+            </div>
+            <div class="match-cols" id="matchCols"></div>
+        `;
+        area.innerHTML = html;
+
+        const cols = document.getElementById('matchCols');
+        const leftCol = document.createElement('div'); leftCol.className = 'match-col';
+        const rightCol = document.createElement('div'); rightCol.className = 'match-col';
+        cols.appendChild(leftCol);
+        cols.appendChild(rightCol);
+
+        matchLeft.forEach(item => {
+            const el = document.createElement('div');
+            const isEng = (matchDirection === 'EN2CN');
+            el.className = 'match-item' + (isEng ? ' eng' : '') + (matchedSet.has(item.word) ? ' matched' : '') + (matchSelectedLeft === item.word ? ' selected' : '') + (matchWrongPair.left === item.word ? ' wrong' : '');
+            el.textContent = labelForMatch(item.word, 'left');
+            if (!matchedSet.has(item.word)) {
+                el.onclick = () => onMatchClick(item.word, 'left');
+            }
+            leftCol.appendChild(el);
+        });
+        matchRight.forEach(item => {
+            const el = document.createElement('div');
+            const isEng = (matchDirection === 'CN2EN');
+            el.className = 'match-item' + (isEng ? ' eng' : '') + (matchedSet.has(item.word) ? ' matched' : '') + (matchSelectedRight === item.word ? ' selected' : '') + (matchWrongPair.right === item.word ? ' wrong' : '');
+            el.textContent = labelForMatch(item.word, 'right');
+            if (!matchedSet.has(item.word)) {
+                el.onclick = () => onMatchClick(item.word, 'right');
+            }
+            rightCol.appendChild(el);
+        });
+
+        if (matchWords.length > 0 && matchMatchedCount >= matchWords.length) {
+            const done = document.createElement('div');
+            done.className = 'match-done';
+            done.innerHTML = `
+                <div style="font-size:44px; margin-bottom:12px;">🎉</div>
+                <p style="color:#4ade80; margin-bottom:20px;">本輪配對完成！</p>
+                <button class="next-btn" onclick="startMatch()">🔄 刷下一輪</button>
+            `;
+            area.appendChild(done);
+        }
+    }
+
+    function onMatchClick(word, side) {
+        playTileClickSound();
+
+        if (side === 'left') {
+            matchSelectedLeft = matchSelectedLeft === word ? null : word;
+        } else {
+            matchSelectedRight = matchSelectedRight === word ? null : word;
+        }
+
+        if (matchSelectedLeft && matchSelectedRight) {
+            if (matchSelectedLeft === matchSelectedRight) {
+                matchedSet.add(matchSelectedLeft);
+                matchMatchedCount++;
+                matchSelectedLeft = null;
+                matchSelectedRight = null;
+                playCorrectFx();
+                renderMatch();
+            } else {
+                // 配對錯誤：把兩個被誤配的詞都送入生詞簿（艾賓浩斯排程）
+                const wLeft = matchWords.find(w => w.word === matchSelectedLeft);
+                const wRight = matchWords.find(w => w.word === matchSelectedRight);
+                if (wLeft) handleEbbinghausResult(wLeft, false);
+                if (wRight && (!wLeft || wRight.word !== wLeft.word)) handleEbbinghausResult(wRight, false);
+                updateStats();
+                saveState();
+                playWrongFx();
+
+                matchWrongPair = { left: matchSelectedLeft, right: matchSelectedRight };
+                renderMatch();
+                setTimeout(() => {
+                    matchSelectedLeft = null;
+                    matchSelectedRight = null;
+                    matchWrongPair = { left: null, right: null };
+                    renderMatch();
+                }, 450);
+            }
+        } else {
+            renderMatch();
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('statTotal').innerText = unitPracticedCount;
+        document.getElementById('statStreak').innerText = streakCount;
+        
+        let now = Date.now();
+        let allMistakes = Object.values(mistakeDict);
+        let dueCount = allMistakes.filter(m => m.nextReview <= now).length;
+
+        document.getElementById('statMistakes').innerText = allMistakes.length;
+        
+        const dueEl = document.getElementById('statDue');
+        if (dueCount > 0) {
+            dueEl.innerText = `今日待複習: ${dueCount}`;
+            dueEl.style.color = '#f87171';
+            dueEl.style.fontWeight = 'bold';
+        } else {
+            dueEl.innerText = `今日待複習: 0`;
+            dueEl.style.color = 'var(--text-muted)';
+            dueEl.style.fontWeight = 'normal';
+        }
+
+        const mistakeOpt = document.getElementById('mistakeOptionText');
+        if (mistakeOpt) {
+            mistakeOpt.innerText = `💔 生詞簿 (${allMistakes.length} 詞)`;
+        }
+    }
+
+    function updateProgressText() {
+        const progressEl = document.getElementById('unitProgress');
+        if (progressEl) {
+            let poolType = (currentRoundMistakes.length > 0 || playQueue.length < unitSize) && currentUnitIndex !== -2 ? '(錯題回顧) ' : '';
+            progressEl.innerText = `進度: ${poolType}${currentQuestionIndex + 1} / ${playQueue.length}`;
+        }
+    }
+
+    function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function escapeJs(unsafe) {
+         if (!unsafe) return '';
+         return unsafe.toString().replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+</script>
+</body>
+</html>
